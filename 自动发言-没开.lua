@@ -52,7 +52,7 @@ local function SayNext()
 
         if current_index > #text then
             all_messages_sent = true
-            UnloadScript("NoCheat.lua")
+            UnloadScript("自动发言-没开.lua")
         end
         
         last_say_time = current_time
@@ -60,3 +60,4 @@ local function SayNext()
 end
 
 callbacks.Register("Draw", SayNext)
+
