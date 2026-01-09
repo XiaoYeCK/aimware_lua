@@ -6,6 +6,37 @@ function NM(RFName,SetName)
     RFName:SetName(SetName)
 end
 
+local function HasNonASCII(str)
+    for i = 1, #str do
+        local byteVal = string.byte(str, i)
+        if byteVal > 127 then
+            return true
+        end
+    end
+    return false
+end
+
+local function CheckForNonASCII()
+    local function CheckChildren(obj)
+        local name = obj:GetName()
+        if HasNonASCII(name) then
+            print("已汉化,跳过加载")
+            return true
+        end
+        for child in obj:Children() do
+            if CheckChildren(child) then
+                return true
+            end
+        end
+        return false
+    end
+    return CheckChildren(gui.Reference("MENU"))
+end
+
+if CheckForNonASCII() then
+    return
+end
+
 NM(RF("Legitbot"),"合法")
     NM(RF("合法", "Aimbot"),"自瞄")
         NM(RF("合法", "自瞄", "Main"),"主要")
@@ -117,7 +148,7 @@ NM(RF("Ragebot"),"暴力")
             RF("暴力", "反自瞄", "反自瞄总开关"):SetDescription("启用反自瞄")
         NM(RF("暴力", "反自瞄", "Pitch Angle"),"俯仰角度")
             RF("暴力", "反自瞄", "俯仰角度"):SetDescription("反自瞄的俯仰角度选项")
-            RF("暴力", "反自瞄", "俯仰角度"):SetOptions("关闭","低头","抬头","假抬头","平视")
+            RF("暴力", "反自瞄", "俯仰角度"):SetOptions("关闭","低头","抬头","假抬头 (非官匹可用)","平视")
         NM(RF("暴力", "反自瞄", "Yaw Angle"),"偏航角度")
             RF("暴力", "反自瞄", "偏航角度"):SetDescription("反自瞄的偏航角度选项")
             RF("暴力", "反自瞄", "偏航角度"):SetOptions("朝前","朝后")
@@ -133,7 +164,7 @@ NM(RF("Ragebot"),"暴力")
             NM(RF("暴力", "反自瞄", "禁用条件", "During Freeze Time"),"回合冻结时")
     NM(RF("暴力", "Auto Peek"),"自动Peek")
         NM(RF("暴力", "自动Peek", "Enable"),"自动Peek总开关")
-            RF("暴力", "自动Peek", "自动Peek总开关"):SetDescription("启用自动Peek")
+            RF("暴力", "自动Peek", "自动Peek总开关"):SetDescription("启用自动Peek, 等修复")
         NM(RF("暴力", "自动Peek", "Key"),"自动Peek热键")
             RF("暴力", "自动Peek", "自动Peek热键"):SetDescription("按住设定的热键时自动Peek生效")
         NM(RF("暴力", "自动Peek", "Show indicator"),"渲染指示器")
@@ -478,8 +509,8 @@ NM(RF("Miscellaneous"),"杂项")
             RF("杂项", "功能", "反OBS"):SetDescription("使OBS录不到作弊画面, 只支持OBS的游戏采集")
         NM(RF("杂项", "功能", "Show Watermark"),"显示水印")
             RF("杂项", "功能", "显示水印"):SetDescription("右上角显示水印")
-        NM(RF("杂项", "功能", "Quick Plant"),"禁用快速下包")
-            RF("杂项", "功能", "禁用快速下包"):SetDescription("应该是自动快速下包的, 等修复")
+        NM(RF("杂项", "功能", "Quick Plant"),"快速下包")
+            RF("杂项", "功能", "快速下包"):SetDescription("仅部分服务器可用")
         NM(RF("杂项", "功能", "Log"),"日志")
             RF("杂项", "功能", "日志"):SetDescription("左上角显示日志信息")
             NM(RF("杂项", "功能", "日志", "Console"),"控制台")
@@ -487,18 +518,25 @@ NM(RF("Miscellaneous"),"杂项")
             NM(RF("杂项", "功能", "日志", "Damage"),"伤害")
     NM(RF("杂项", "Movement"),"移动")
         NM(RF("杂项", "移动", "Auto Strafe"),"空中加速")
-            RF("杂项", "移动", "空中加速"):SetDescription("抖头, 不适合绿演")
+            RF("杂项", "移动", "空中加速"):SetDescription("空中自动加速")
+        NM(RF("杂项", "移动", "Strafe Speed Boost"),"加速幅度")
+            RF("杂项", "移动", "加速幅度"):SetDescription("调整空中加速的幅度")
+        NM(RF("杂项", "移动", "Air Turn Speed"),"空中转向速度")
+            RF("杂项", "移动", "空中转向速度"):SetDescription("调整空中转向的速度")
         NM(RF("杂项", "移动", "Auto Jump"),"连跳")
             RF("杂项", "移动", "连跳"):SetDescription("选择自动连跳的模式")
             RF("杂项", "移动", "连跳"):SetOptions("关闭","完美","合法");
+        NM(RF("杂项", "移动", "Jump Bug"),"跳跃漏洞")
+            RF("杂项", "移动", "跳跃漏洞"):SetDescription("移除坠落扣血")
+            RF("杂项", "移动", "跳跃漏洞"):SetOptions("关闭","始终开启","坠落受伤时开启");
         NM(RF("杂项", "移动", "Edge Jump"),"边缘跳跃")
             RF("杂项", "移动", "边缘跳跃"):SetDescription("按住热键时靠近边缘自动跳跃")
         NM(RF("杂项", "移动", "Slow Walk Key"),"慢走热键")
             RF("杂项", "移动", "慢走热键"):SetDescription("按住设定的热键时慢走生效")
         NM(RF("杂项", "移动", "Slow Walk Speed"),"慢走速度")
-            RF("杂项", "移动", "慢走速度"):SetDescription("调整慢走速度, 目前过低走不动, 等修复")
+            RF("杂项", "移动", "慢走速度"):SetDescription("仅部分服务器可用")
         NM(RF("杂项", "移动", "Quick Stop"),"快速急停")
-            RF("杂项", "移动", "快速急停"):SetDescription("松开移动键时快速急停, 无效等修复")
+            RF("杂项", "移动", "快速急停"):SetDescription("仅部分服务器可用")
 
 NM(RF("Configurations"),"参数")
     NM(RF("参数", "Local"),"本地")
@@ -522,9 +560,10 @@ NM(RF("Lua Scripts"),"Lua脚本")
         NM(RF("Lua脚本", "其它", "Load With Configurations"),"随参数加载")
             RF("Lua脚本", "其它", "随参数加载"):SetDescription("开启后在脚本加载时保存参数, 下次注入后自动加载脚本")
 
-print("更新日期: 2025-11-25")
-print("汉化已加载, 请勿重复加载脚本")
+print("更新日期: 2026-01-09")
+print("汉化已加载")
 
+-- 使脚本一直处于加载状态
 function Something() end
 
 callbacks.Register("Draw", Something)
