@@ -2,10 +2,6 @@
 -- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 
--- 启用控制台日志
-gui.SetValue("misc.master", true);
-gui.SetValue("misc.log.console", true);
-
 WeaponList={"Shared",--全局共享
             "Zeus",--电击枪
             "Pistol",--手枪
@@ -13,7 +9,7 @@ WeaponList={"Shared",--全局共享
             "Submachine Gun",--冲锋枪
             "Rifle",--步枪
             "Shotgun",--霰弹枪
-            "Scout",--SSG08
+            "Scout",--鸟狙
             "Auto Sniper",--连狙
             "Sniper",--AWP
             "Light Machine Gun"--机枪
@@ -46,37 +42,7 @@ function NN(RF, Name)
     end
 end
 
-local function HasNonASCII(str)
-    for i = 1, #str do
-        local byteVal = string.byte(str, i)
-        if byteVal > 127 then
-            return true
-        end
-    end
-    return false
-end
-
-local function CheckForNonASCII()
-    local function CheckChildren(obj)
-        local name = obj:GetName()
-        if HasNonASCII(name) then
-            print("加载被阻止 (简易防崩溃)")
-            return true
-        end
-        for child in obj:Children() do
-            if CheckChildren(child) then
-                return true
-            end
-        end
-        return false
-    end
-    return CheckChildren(gui.Reference("MENU"))
-end
-
-if CheckForNonASCII() then
-    return
-end
-
+local function Apply()
 SN(RF("Legitbot"), "合法")
     SN(RF("合法", "Aimbot"), "自瞄")
         SN(RF("合法", "自瞄", "Main"), "主要")
@@ -687,9 +653,40 @@ SN(NN(RF("MENU"), "Show UI Hints"), "显示功能描述")
 SN(NN(RF("MENU"), "UI Opacity"), "界面透明度")
     SD(NN(RF("MENU"), "界面透明度"), "调整界面透明度")
 
-print("更新日期: 2026-04-09")
-print("汉化已加载")
+gui.SetValue("misc.master", true);
+gui.SetValue("misc.log.console", true);
 
--- 使脚本一直处于加载状态, 允许保存为随参数加载
-function Something() end
-callbacks.Register("Draw", Something)
+print("更新日期: 2026-04-10")
+end
+
+local function NonASCII(str)
+    for i = 1, #str do
+        local byteVal = string.byte(str, i)
+        if byteVal > 127 then
+            return true
+        end
+    end
+    return false
+end
+
+local function Check()
+    local function CheckChildren(obj)
+        local name = obj:GetName()
+        if NonASCII(name) then
+            return true
+        end
+        for child in obj:Children() do
+            if CheckChildren(child) then
+                return true
+            end
+        end
+        return false
+    end
+    return CheckChildren(RF("MENU"))
+end
+
+if not Check() then
+    Apply()
+end
+
+callbacks.Register("Draw", function() end)
