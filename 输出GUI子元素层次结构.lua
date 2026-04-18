@@ -1,8 +1,16 @@
-local function PrintChildren(obj, prefix)
-    print(prefix .. obj:GetName());
-    for child in obj:Children() do
-        PrintChildren(child, prefix .. "\t");
+function DumpGUI()
+    output = ""
+
+    function traverse(obj, prefix)
+        output = output .. prefix .. obj:GetName() .. "\n"
+        for child in obj:Children() do
+            traverse(child, prefix .. "\t")
+        end
     end
+
+    traverse(RF(), "")
+
+    return output
 end
 
-PrintChildren(gui.Reference("MENU"), "");
+file.Write("EN_Lang.txt", DumpGUI())
