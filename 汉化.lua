@@ -2,6 +2,8 @@
 -- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 
+gui.SetValue("lua.savecfg", true)
+
 WeaponList={"Shared",--全局共享
             "Zeus",--电击枪
             "Pistol",--手枪
@@ -17,6 +19,12 @@ WeaponList={"Shared",--全局共享
 
 RF=gui.Reference
 
+function NewPrint(...)
+    gui.SetValue("misc.master", true)
+    gui.SetValue("misc.log.console", true)
+    print(...)
+end
+
 function SN(RF,Name)
     RF:SetName(Name)
 end
@@ -29,20 +37,54 @@ function SD(RF,Description)
     RF:SetDescription(Description)
 end
 
-function NN(RF, Name)
+function FC(...)
+    return RF(...):Children()()
+end
+
+function FCR(RF, Name)
     for child in RF:Children() do
         if child:GetName() == Name then
             return child
         end
 
-        local found = NN(child, Name)
+        found = FCR(child, Name)
         if found then
             return found
         end
     end
 end
 
-local function Apply()
+ScriptName = GetScriptName()
+TargetName = "汉化.lua"
+
+if ScriptName ~= TargetName then
+    local CurrentScript = file.Read(ScriptName)
+    file.Write(TargetName, CurrentScript)
+    file.Delete(ScriptName)
+    NewPrint("脚本已重命名为: 汉化.lua")
+    NewPrint("请刷新后重新加载")
+end
+
+function DumpGUI()
+    output = ""
+
+    function traverse(obj, prefix)
+        output = output .. prefix .. obj:GetName() .. "\n"
+        for child in obj:Children() do
+            traverse(child, prefix .. "\t")
+        end
+    end
+
+    traverse(RF(), "")
+
+    return output
+end
+
+DumpOutput = DumpGUI()
+
+file.Write("EN_Lang.txt", DumpOutput)
+
+function TranslateToChinese()
 SN(RF("Legitbot"), "合法")
     SN(RF("合法", "Aimbot"), "自瞄")
         SN(RF("合法", "自瞄", "Main"), "主要")
@@ -151,8 +193,6 @@ SN(RF("Ragebot"), "暴力")
             SO(RF("暴力", "主要", "自动刀"), "关闭", "重击", "仅背刺", "快速")
         SN(RF("暴力", "主要", "Duck Peek assist"), "蹲起Peek")
             SD(RF("暴力", "主要", "蹲起Peek"), "按住蹲下, 若站起时可造成的伤害大于最低伤害, 则自动站起 (自动急停关闭时生效)")
-        SN(RF("暴力", "主要", "Anti-aim Correction"), "假俯仰修正")
-            SD(RF("暴力", "主要", "假俯仰修正"), "修正敌方反自瞄的假俯仰角度, 使自瞄正确击中头部")
     SN(RF("暴力", "Anti-Aim"), "反自瞄")
         SN(RF("暴力", "反自瞄", "Enabled"), "总开关")
             SD(RF("暴力", "反自瞄", "总开关"), "启用反自瞄")
@@ -175,15 +215,15 @@ SN(RF("Ragebot"), "暴力")
     SN(RF("暴力", "Auto Peek"), "自动Peek")
         SN(RF("暴力", "自动Peek", "Enable"), "总开关")
             SD(RF("暴力", "自动Peek", "总开关"), "启用自动Peek")
-                SN(NN(RF("暴力", "自动Peek", "总开关"), "Key"), "热键")
-                    SD(NN(RF("暴力", "自动Peek", "总开关"), "热键"), "设定启用自动Peek的热键")
-                SN(NN(RF("暴力", "自动Peek", "总开关"), "Show indicator"), "显示指示器")
-                    SD(NN(RF("暴力", "自动Peek", "总开关"), "显示指示器"), "激活自动Peek后在脚底显示指示器")
-                SN(NN(RF("暴力", "自动Peek", "总开关"), "Type"), "热键模式")
-                    SD(NN(RF("暴力", "自动Peek", "总开关"), "热键模式"), "选择热键的工作模式")
-                    SO(NN(RF("暴力", "自动Peek", "总开关"), "热键模式"), "按住生效", "开关切换")
-                SN(NN(RF("暴力", "自动Peek", "总开关"), "Maintain Origin"), "复位不重置")
-                    SD(NN(RF("暴力", "自动Peek", "总开关"), "复位不重置"), "开启后, 复位不清除状态, 可连续Peek, 无需关闭再开启")
+                SN(FCR(RF("暴力", "自动Peek", "总开关"), "Key"), "热键")
+                    SD(FCR(RF("暴力", "自动Peek", "总开关"), "热键"), "设定启用自动Peek的热键")
+                SN(FCR(RF("暴力", "自动Peek", "总开关"), "Show indicator"), "显示指示器")
+                    SD(FCR(RF("暴力", "自动Peek", "总开关"), "显示指示器"), "激活自动Peek后在脚底显示指示器")
+                SN(FCR(RF("暴力", "自动Peek", "总开关"), "Type"), "热键模式")
+                    SD(FCR(RF("暴力", "自动Peek", "总开关"), "热键模式"), "选择热键的工作模式")
+                    SO(FCR(RF("暴力", "自动Peek", "总开关"), "热键模式"), "按住生效", "开关切换")
+                SN(FCR(RF("暴力", "自动Peek", "总开关"), "Maintain Origin"), "复位不重置")
+                    SD(FCR(RF("暴力", "自动Peek", "总开关"), "复位不重置"), "开启后, 复位不清除状态, 可连续Peek, 无需关闭再开启")
     SN(RF("暴力", "Accuracy"), "数值")
         for i = 1, 11, 1 do
             SN(RF("暴力", "数值", WeaponList[i], "Min Damage"), "最低伤害")
@@ -445,21 +485,21 @@ SN(RF("World"), "视觉")
         SN(RF("视觉", "环境", "Weather"), "天气")
             SO(RF("视觉", "环境", "天气"), "无", "雨天", "雪天", "余烬", "灰烬")
             for i = 1, 4 do
-                SN(NN(RF("视觉", "环境", "天气"), "Color Override"), "颜色")
-                    SD(NN(RF("视觉", "环境", "天气"), "颜色"), "调整天气特效颜色")
-                SN(NN(RF("视觉", "环境", "天气"), "Intensity"), "强度")
-                    SD(NN(RF("视觉", "环境", "天气"), "强度"), "调整特效数量")
+                SN(FCR(RF("视觉", "环境", "天气"), "Color Override"), "颜色")
+                    SD(FCR(RF("视觉", "环境", "天气"), "颜色"), "调整天气特效颜色")
+                SN(FCR(RF("视觉", "环境", "天气"), "Intensity"), "强度")
+                    SD(FCR(RF("视觉", "环境", "天气"), "强度"), "调整特效数量")
                 
             end
 
             for i = 1, 3 do
-                SN(NN(RF("视觉", "环境", "天气"), "Glow"), "边缘发光")
-                    SD(NN(RF("视觉", "环境", "天气"), "边缘发光"), "特效边缘发光")
+                SN(FCR(RF("视觉", "环境", "天气"), "Glow"), "边缘发光")
+                    SD(FCR(RF("视觉", "环境", "天气"), "边缘发光"), "特效边缘发光")
             end
 
             for i = 1, 2 do
-                SN(NN(RF("视觉", "环境", "天气"), "Lightning"), "雷电")
-                    SD(NN(RF("视觉", "环境", "天气"), "雷电"), "开关雷电和雷声")
+                SN(FCR(RF("视觉", "环境", "天气"), "Lightning"), "雷电")
+                    SD(FCR(RF("视觉", "环境", "天气"), "雷电"), "开关雷电和雷声")
             end
         SN(RF("视觉", "环境", "Skybox"), "天空")
             SD(RF("视觉", "环境", "天空"), "选择天空盒预设, 或使用自定义天空盒")
@@ -471,6 +511,8 @@ SN(RF("World"), "视觉")
             SD(RF("视觉", "环境", "云朵颜色"), "调整云朵颜色")
         SN(RF("视觉", "环境", "Sun Color"), "太阳颜色")
             SD(RF("视觉", "环境", "太阳颜色"), "调整太阳颜色")
+        SN(RF("视觉", "环境", "Light Color"), "光颜色")
+            SD(RF("视觉", "环境", "光颜色"), "调整光颜色")
         SN(RF("视觉", "环境", "Explosion Color"), "爆炸颜色")
             SD(RF("视觉", "环境", "爆炸颜色"), "调整爆炸特效颜色")
         SN(RF("视觉", "环境", "Fire Color"), "火焰颜色")
@@ -496,6 +538,7 @@ SN(RF("World"), "视觉")
             SN(RF("视觉", "增强", "特效移除", "No Recoil"), "视觉后坐")
             SN(RF("视觉", "增强", "特效移除", "No Scope"), "瞄准镜放大")
             SN(RF("视觉", "增强", "特效移除", "No Scope Overlay"), "瞄准镜虚化")
+            SN(RF("视觉", "增强", "特效移除", "No Legs"), "第一人称腿部")
             SN(RF("视觉", "增强", "特效移除", "No Sky"), "天空")
     SN(RF("视觉", "Helper"), "辅助")
         SN(RF("视觉", "辅助", "Wallbang Info"), "穿墙指示器")
@@ -540,10 +583,10 @@ SN(RF("World"), "视觉")
         SN(RF("视觉", "辅助", "Kill Effect"), "击杀特效")
             SD(RF("视觉", "辅助", "击杀特效"), "击杀敌人后的特效")
             SO(RF("视觉", "辅助", "击杀特效"), "关闭", "汽化", "液化")
-                SN(NN(RF("视觉", "辅助", "击杀特效"), "Primary Color"), "主要颜色")
-                SN(NN(RF("视觉", "辅助", "击杀特效"), "Secondary Color"), "次要颜色")
-                SN(NN(RF("视觉", "辅助", "击杀特效"), "Intensity"), "强度")
-                SN(NN(RF("视觉", "辅助", "击杀特效"), "Dissolve"), "扩散")
+                SN(FCR(RF("视觉", "辅助", "击杀特效"), "Primary Color"), "主要颜色")
+                SN(FCR(RF("视觉", "辅助", "击杀特效"), "Secondary Color"), "次要颜色")
+                SN(FCR(RF("视觉", "辅助", "击杀特效"), "Intensity"), "强度")
+                SN(FCR(RF("视觉", "辅助", "击杀特效"), "Dissolve"), "扩散")
         SN(RF("视觉", "辅助", "Bullet Tracers"), "显示子弹轨迹")
             SD(RF("视觉", "辅助", "显示子弹轨迹"), "显示子弹飞行轨迹")
             SN(RF("视觉", "辅助", "显示子弹轨迹", "Local"), "自身")
@@ -579,10 +622,10 @@ SN(RF("Miscellaneous"), "杂项")
     SN(RF("杂项", "Movement"), "移动")
         SN(RF("杂项", "移动", "Auto Strafe"), "空中加速")
             SD(RF("杂项", "移动", "空中加速"), "滞空时增加移速和灵活性")
-                SN(NN(RF("杂项", "移动", "空中加速"), "Speed Boost"), "加速增幅")
-                    SD(NN(RF("杂项", "移动", "空中加速"), "加速增幅"), "调整空中加速的增幅")
-                SN(NN(RF("杂项", "移动", "空中加速"), "Air Turn Speed"), "转向速度增幅")
-                    SD(NN(RF("杂项", "移动", "空中加速"), "转向速度增幅"), "调整空中转向的速度增幅")
+                SN(FCR(RF("杂项", "移动", "空中加速"), "Speed Boost"), "加速增幅")
+                    SD(FCR(RF("杂项", "移动", "空中加速"), "加速增幅"), "调整空中加速的增幅")
+                SN(FCR(RF("杂项", "移动", "空中加速"), "Air Turn Speed"), "转向速度增幅")
+                    SD(FCR(RF("杂项", "移动", "空中加速"), "转向速度增幅"), "调整空中转向的速度增幅")
         SN(RF("杂项", "移动", "Auto Jump"), "自动连跳")
             SD(RF("杂项", "移动", "自动连跳"), "选择自动连跳的模式")
             SO(RF("杂项", "移动", "自动连跳"), "关闭", "完美", "合法")
@@ -591,8 +634,6 @@ SN(RF("Miscellaneous"), "杂项")
             SO(RF("杂项", "移动", "跳跃漏洞"), "关闭", "常开", "坠落受伤时")
         SN(RF("杂项", "移动", "Edge Jump"), "边缘跳跃")
             SD(RF("杂项", "移动", "边缘跳跃"), "按住热键时走到边缘自动跳跃")
-        SN(RF("杂项", "移动", "Air Duck"), "空中蹲下")
-            SD(RF("杂项", "移动", "空中蹲下"), "空中自动蹲下")
         SN(RF("杂项", "移动", "Slow Walk Key"), "慢走热键")
             SD(RF("杂项", "移动", "慢走热键"), "按住设定的热键时慢走生效")
         SN(RF("杂项", "移动", "Slow Walk Speed"), "慢走速度")
@@ -604,11 +645,11 @@ SN(RF("Miscellaneous"), "杂项")
 
 SN(RF("Configurations"), "参数")
     SN(RF("参数", "Local"), "本地")
-        SN(NN(RF("参数", "本地"), "Create"), "创建")
+        SN(FCR(RF("参数", "本地"), "Create"), "创建")
 
 SN(RF("Lua Scripts"), "Lua脚本")
     SN(RF("Lua脚本", "Local"), "本地")
-        SN(NN(RF("Lua脚本", "本地"), "Create"), "创建")
+        SN(FCR(RF("Lua脚本", "本地"), "Create"), "创建")
     SN(RF("Lua脚本", "Security"), "安全")
         SN(RF("Lua脚本", "安全", "Allow scripts to edit lua files"), "允许脚本编辑lua文件")
             SD(RF("Lua脚本", "安全", "允许脚本编辑lua文件"), "允许修改其他脚本文件")
@@ -626,9 +667,9 @@ SN(RF("Lua Scripts"), "Lua脚本")
         SN(RF("Lua脚本", "其它", "Load With Configurations"), "随参数加载")
             SD(RF("Lua脚本", "其它", "随参数加载"), "开启后在脚本加载时保存参数, 加载参数时自动加载脚本")
 
-SN(NN(RF("MENU"), "Dpi Scale"), "界面缩放比例")
-    SD(NN(RF("MENU"), "界面缩放比例"), "调整界面缩放比例, 以适应不同分辨率")
-    SO(NN(RF("MENU"), "界面缩放比例"), "75%",
+SN(FCR(RF(), "Dpi Scale"), "界面缩放比例")
+    SD(FCR(RF(), "界面缩放比例"), "调整界面缩放比例, 以适应不同分辨率")
+    SO(FCR(RF(), "界面缩放比例"), "75%",
                                     "100% (默认)",
                                     "125%",
                                     "150%",
@@ -638,30 +679,29 @@ SN(NN(RF("MENU"), "Dpi Scale"), "界面缩放比例")
                                     "250%",
                                     "275%",
                                     "300%")
-SN(NN(RF("MENU"), "Theme"), "主题")
-    SD(NN(RF("MENU"), "主题"), "选择预设配色主题")
-    SO(NN(RF("MENU"), "主题"), "默认", "浅色", "深色")
-SN(NN(RF("MENU"), "Menu Key"), "菜单热键")
-    SD(NN(RF("MENU"), "菜单热键"), "设置开关菜单热键")
-SN(NN(RF("MENU"), "Console Key"), "控制台热键")
-    SD(NN(RF("MENU"), "控制台热键"), "设置开关控制台热键")
-SN(NN(RF("MENU"), "Show Binds"), "显示绑定状态")
-    SD(NN(RF("MENU"), "显示绑定状态"), "在新的界面 (可拖动) 显示绑定了按键的功能的状态 (开关/选项/数值)")
-    SO(NN(RF("MENU"), "显示绑定状态"), "关闭", "变量", "名称", "短名")
-SN(NN(RF("MENU"), "Show UI Hints"), "显示功能描述")
-    SD(NN(RF("MENU"), "显示功能描述"), "指针悬停在功能名上时显示描述")
-SN(NN(RF("MENU"), "UI Opacity"), "界面透明度")
-    SD(NN(RF("MENU"), "界面透明度"), "调整界面透明度")
+SN(FCR(RF(), "Theme"), "主题")
+    SD(FCR(RF(), "主题"), "选择预设配色主题")
+    SO(FCR(RF(), "主题"), "默认", "浅色", "深色")
+SN(FCR(RF(), "Menu Key"), "菜单热键")
+    SD(FCR(RF(), "菜单热键"), "设置开关菜单热键")
+SN(FCR(RF(), "Console Key"), "控制台热键")
+    SD(FCR(RF(), "控制台热键"), "设置开关控制台热键")
+SN(FCR(RF(), "Show Binds"), "显示绑定状态")
+    SD(FCR(RF(), "显示绑定状态"), "在新的界面 (可拖动) 显示绑定了按键的功能的状态 (开关/选项/数值)")
+    SO(FCR(RF(), "显示绑定状态"), "关闭", "变量", "名称", "短名")
+SN(FCR(RF(), "Show UI Hints"), "显示功能描述")
+    SD(FCR(RF(), "显示功能描述"), "指针悬停在功能名上时显示描述")
+SN(FCR(RF(), "UI Opacity"), "界面透明度")
+    SD(FCR(RF(), "界面透明度"), "调整界面透明度")
 
-gui.SetValue("misc.master", true);
-gui.SetValue("misc.log.console", true);
+NewPrint("更新日期: 2026-04-22(未完工)")
 
-print("更新日期: 2026-04-10")
+NewPrint("汉化状态下保存的参数加载前必须保证相同文件名的汉化脚本在相同相对目录")
 end
 
-local function NonASCII(str)
+function NonASCII(str)
     for i = 1, #str do
-        local byteVal = string.byte(str, i)
+        byteVal = string.byte(str, i)
         if byteVal > 127 then
             return true
         end
@@ -669,24 +709,21 @@ local function NonASCII(str)
     return false
 end
 
-local function Check()
-    local function CheckChildren(obj)
-        local name = obj:GetName()
-        if NonASCII(name) then
-            return true
-        end
-        for child in obj:Children() do
-            if CheckChildren(child) then
-                return true
-            end
-        end
-        return false
-    end
-    return CheckChildren(RF("MENU"))
+function CheckTranslated()
+    return NonASCII(DumpOutput)
 end
 
-if not Check() then
-    Apply()
+if not CheckTranslated() then
+    TranslateToChinese()
+else
+    NewPrint("已汉化")
 end
+
+-- 需要print提醒开放网络权限
+gui.Checkbox(FC(), "sync_online_scripts", "同步在线脚本", false)
+    SD(FCR(RF(), "同步在线脚本"), "从作者仓库同步脚本")
+
+gui.Button(FC(), "立即同步", function()
+end)
 
 callbacks.Register("Draw", function() end)
