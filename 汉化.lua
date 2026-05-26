@@ -55,13 +55,13 @@ function FCR(RF, Name)
 end
 
 ScriptName = GetScriptName()
-TargetName = "汉化.lua"
+TargetName = "!汉化.lua"
 
 if ScriptName ~= TargetName then
     local CurrentScript = file.Read(ScriptName)
     file.Write(TargetName, CurrentScript)
     file.Delete(ScriptName)
-    NewPrint("脚本已重命名为: 汉化.lua")
+    NewPrint("脚本已重命名为: " .. TargetName .. " (优先加载)")
     NewPrint("请刷新后重新加载")
 end
 
@@ -709,7 +709,7 @@ SN(FCR(RF(), "Show UI Hints"), "显示功能描述")
 SN(FCR(RF(), "UI Opacity"), "界面透明度")
     SD(FCR(RF(), "界面透明度"), "调整界面透明度")
 
-NewPrint("更新日期: 2026-05-09")
+NewPrint("更新日期: 2026-05-26")
 
 NewPrint("汉化状态下保存的参数加载前必须保证相同文件名的汉化脚本在相同相对目录")
 end
