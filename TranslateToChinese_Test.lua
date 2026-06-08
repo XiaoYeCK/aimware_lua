@@ -108,10 +108,11 @@ end
 function ValidateOnline(dumpOutput, scriptName)
     localScript = file.Read(scriptName)
 
-    if not CompareWithOnline(localScript, FileCheckURL) == "Skip" then
-        if not CompareWithOnline(localScript, FileCheckURL) then
-            return false -- 本地与在线文件不一致
-        end
+    local result1 = CompareWithOnline(localScript, FileCheckURL)
+    if result1 == "Skip" then
+        return false -- 网络不可用
+    elseif result1 == false then
+        return false -- 本地与在线文件不一致
     end
 
     if not CompareWithOnline(dumpOutput, CheckUpdateURL) == "Skip" then
