@@ -5,8 +5,8 @@
 
 ScriptName = GetScriptName()
 
-FileCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/TranslateToChinese_Test.lua" -- 内容和本文件一样
-CheckUpdateURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/Check.en" -- 内容和"EN_Lang.txt"一样
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/TranslateToChinese_Test.lua" -- 内容和本文件一样
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/Check.en" -- 内容和"EN_Lang.txt"一样
 
 TargetName = "!汉化.lua"
 
@@ -101,8 +101,8 @@ function CompareWithOnline(localText, url)
 
     remote = FetchURL(url)
     -- 移除换行和空格再检查一致性
-    local cleanLocal = localText:gsub("[\n\r\t ]", "")
-    local cleanRemote = remote:gsub("[\n\r\t ]", "")
+    cleanLocal = localText:gsub("[\n\r\t ]", "")
+    cleanRemote = remote:gsub("[\n\r\t ]", "")
     
     if cleanRemote ~= cleanLocal then
         return false
@@ -113,22 +113,23 @@ end
 function ValidateOnline(dumpOutput, scriptName)
     localScript = file.Read(scriptName)
 
-    local result1 = CompareWithOnline(localScript, FileCheckURL)
-    if result1 == "Skip" then
-        NewPrint("网络不可用")
-        return false -- 网络不可用
-    elseif result1 == false then
+    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
+    if LuaResult == "Skip" then
+        return false
+    elseif LuaResult == false then
         NewPrint("本地与在线文件不一致")
-        file.Write("Remote.lua", http.Get(FileCheckURL))
-        return false -- 本地与在线文件不一致
+        file.Write("Remote.lua", http.Get(LuaCheckURL))
+        return false
     end
 
-    if not CompareWithOnline(dumpOutput, CheckUpdateURL) == "Skip" then
-        if not CompareWithOnline(dumpOutput, CheckUpdateURL) then
+    UpdateResult = CompareWithOnline(dumpOutput, UpdateCheckURL)
+    if UpdateResult == "Skip" then
+        return false
+        elseif UpdateResult == false then
             NewPrint("AimWare更新")
             file.Write("EN_Lang.txt", DumpOutput)
-            file.Write("RemoteEN.txt", http.Get(CheckUpdateURL))
-            return false -- AimWare更新
+            file.Write("Remote_EN_Lang.txt", http.Get(UpdateCheckURL))
+            return false
         end
     end
         return true
