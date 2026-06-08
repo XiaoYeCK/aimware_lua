@@ -3,7 +3,20 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- Github:XiaoYeCK/aimware_lua
 
-gui.SetValue("lua.savecfg", true)
+ScriptName = GetScriptName()
+
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/TranslateToChinese.lua"
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/Check.en"
+
+TargetName = "!汉化.lua"
+
+if ScriptName ~= TargetName then
+    CurrentScript = file.Read(ScriptName)
+    file.Write(TargetName, CurrentScript)
+    file.Delete(ScriptName)
+    NewPrint("脚本已重命名为: " .. TargetName)
+    NewPrint("请刷新脚本列表后重新加载")
+end
 
 WeaponList={"Shared",--全局共享
             "Zeus",--电击枪
@@ -38,10 +51,6 @@ function SD(RF,Description)
     RF:SetDescription(Description)
 end
 
-function FC(...)
-    return RF(...):Children()()
-end
-
 function FCR(RF, Name)
     for child in RF:Children() do
         if child:GetName() == Name then
@@ -53,17 +62,6 @@ function FCR(RF, Name)
             return found
         end
     end
-end
-
-ScriptName = GetScriptName()
-TargetName = "!汉化.lua"
-
-if ScriptName ~= TargetName then
-    local CurrentScript = file.Read(ScriptName)
-    file.Write(TargetName, CurrentScript)
-    file.Delete(ScriptName)
-    NewPrint("脚本已重命名为: " .. TargetName .. " (优先加载)")
-    NewPrint("请刷新后重新加载")
 end
 
 function DumpGUI()
@@ -83,7 +81,54 @@ end
 
 DumpOutput = DumpGUI()
 
-file.Write("EN_Lang.txt", DumpOutput)
+function FetchURL(url)
+    data = http.Get(url)
+    if type(data) ~= "string" then
+        NewPrint("请求失败")
+        return false
+    end
+    return data
+end
+
+function CompareWithOnline(localText, url)
+    if not FetchURL(url) then
+        return "Skip"
+    end
+
+    remote = FetchURL(url)
+    -- 移除换行和空格再检查一致性
+    cleanLocal = localText:gsub("[\n\r\t ]", "")
+    cleanRemote = remote:gsub("[\n\r\t ]", "")
+    
+    if cleanRemote ~= cleanLocal then
+        return false
+    end
+    return true
+end
+
+function ValidateOnline(dumpOutput, scriptName)
+    localScript = file.Read(scriptName)
+
+    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
+    if LuaResult == "Skip" then
+        return false
+    elseif LuaResult == false then
+        NewPrint("自动同步")
+        file.Write(scriptName, http.Get(LuaCheckURL))
+        LoadScript(scriptName)
+    end
+
+    UpdateResult = CompareWithOnline(dumpOutput, UpdateCheckURL)
+    if UpdateResult == "Skip" then
+        return false
+    elseif UpdateResult == false then
+        NewPrint("AimWare更新")
+        file.Write("EN.txt", DumpOutput)
+        file.Write("EN_Old.txt", http.Get(UpdateCheckURL))
+        return false
+    end
+        return true
+end
 
 function TranslateToChinese()
     SN(FCR(RF(), "Dpi Scale"), "界面缩放比例")
@@ -736,6 +781,8 @@ function TranslateToChinese()
     NewPrint("汉化状态下保存的参数加载前必须保证相同文件名的汉化脚本在相同相对目录(随参数加载也行)")
     NewPrint("此脚本有概率和代码内包含\"gui.Reference\"字符串的其它脚本冲突导致崩溃(需另适配)")
     NewPrint("Github:XiaoYeCK/aimware_lua")
+
+    gui.SetValue("lua.savecfg", true)
 end
 
 function NonASCII(str)
@@ -752,17 +799,10 @@ function CheckTranslated()
     return NonASCII(DumpOutput)
 end
 
-if not CheckTranslated() then
+if not CheckTranslated() and ValidateOnline(DumpOutput, ScriptName) then
     TranslateToChinese()
 else
-    NewPrint("已汉化")
+    NewPrint("汉化已阻止")
 end
 
--- 需要print提醒开放网络权限
-gui.Checkbox(FC(), "sync_online_scripts", "同步在线脚本", false)
-    SD(FCR(RF(), "同步在线脚本"), "从作者仓库同步脚本")
-
-gui.Button(FC(), "立即同步", function()
-end)
-
-callbacks.Register("Draw", function() end)
+callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
