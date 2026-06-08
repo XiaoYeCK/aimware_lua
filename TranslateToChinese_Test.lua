@@ -5,7 +5,7 @@
 
 ScriptName = GetScriptName()
 
-FileCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/TranslateToChinese.lua" -- 内容和本文件一样
+FileCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/TranslateToChinese_Test.lua" -- 内容和本文件一样
 CheckUpdateURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/Check.en" -- 内容和"EN_Lang.txt"一样
 
 TargetName = "!汉化.lua"
