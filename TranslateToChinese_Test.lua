@@ -100,7 +100,11 @@ function CompareWithOnline(localText, url)
     end
 
     remote = FetchURL(url)
-    if remote ~= localText then
+    -- 移除换行和空格再检查一致性
+    local cleanLocal = localText:gsub("[\n\r\t ]", "")
+    local cleanRemote = remote:gsub("[\n\r\t ]", "")
+    
+    if cleanRemote ~= cleanLocal then
         return false
     end
     return true
@@ -115,6 +119,7 @@ function ValidateOnline(dumpOutput, scriptName)
         return false -- 网络不可用
     elseif result1 == false then
         NewPrint("本地与在线文件不一致")
+        file.Write("Remote.lua", http.Get(FileCheckURL))
         return false -- 本地与在线文件不一致
     end
 
