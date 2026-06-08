@@ -117,9 +117,9 @@ function ValidateOnline(dumpOutput, scriptName)
     if LuaResult == "Skip" then
         return false
     elseif LuaResult == false then
-        NewPrint("本地与在线文件不一致")
-        file.Write("Remote.lua", http.Get(LuaCheckURL))
-        return false
+        NewPrint("自动同步")
+        file.Write(scriptName, http.Get(LuaCheckURL))
+        LoadScript(scriptName)
     end
 
     UpdateResult = CompareWithOnline(dumpOutput, UpdateCheckURL)
