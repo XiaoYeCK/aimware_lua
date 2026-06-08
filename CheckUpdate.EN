@@ -1,0 +1,1257 @@
+
+	
+		Dpi Scale
+		Theme
+		Menu Key
+		Console Key
+		Show Binds
+		Show UI Hints
+		UI Opacity
+	Configurations
+		Local
+			
+			
+				Create
+				
+			
+	Legitbot
+		
+		
+		Aimbot
+			Main
+				Enable
+				Aim Key
+				Auto Pistol Interval
+			Hitbox Selection
+				Shared
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Zeus
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Pistol
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Heavy Pistol
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Submachine Gun
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Rifle
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Shotgun
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Scout
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Auto Sniper
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Sniper
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+				Light Machine Gun
+					
+					Hitbox Advance Multiplier
+					Nearest To Crosshair
+		Triggerbot
+			Main
+				Enable
+				Trigger Key
+				Auto Fire
+				Knife Triggerbot
+			Weapon
+				Shared
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Zeus
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Pistol
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Heavy Pistol
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Submachine Gun
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Rifle
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Shotgun
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Scout
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Auto Sniper
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Sniper
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+				Light Machine Gun
+					Trigger Delay
+					Trigger Burst
+					Hit Chance
+					Max backtrack time
+					Accuracy
+						Anti-Recoil
+						Anti-Spread
+			Visibility
+				Shared
+					Auto Wall
+					Through Smoke
+				Zeus
+					Auto Wall
+					Through Smoke
+				Pistol
+					Auto Wall
+					Through Smoke
+				Heavy Pistol
+					Auto Wall
+					Through Smoke
+				Submachine Gun
+					Auto Wall
+					Through Smoke
+				Rifle
+					Auto Wall
+					Through Smoke
+				Shotgun
+					Auto Wall
+					Through Smoke
+				Scout
+					Auto Wall
+					Through Smoke
+				Auto Sniper
+					Auto Wall
+					Through Smoke
+				Sniper
+					Auto Wall
+					Through Smoke
+				Light Machine Gun
+					Auto Wall
+					Through Smoke
+			Hitboxes
+				Shared
+					
+					Min Damage
+				Zeus
+					
+					Min Damage
+				Pistol
+					
+					Min Damage
+				Heavy Pistol
+					
+					Min Damage
+				Submachine Gun
+					
+					Min Damage
+				Rifle
+					
+					Min Damage
+				Shotgun
+					
+					Min Damage
+				Scout
+					
+					Min Damage
+				Auto Sniper
+					
+					Min Damage
+				Sniper
+					
+					Min Damage
+				Light Machine Gun
+					
+					Min Damage
+		Weapon
+			Aiming
+				Shared
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Zeus
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Pistol
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Heavy Pistol
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Submachine Gun
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Rifle
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Shotgun
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Scout
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Auto Sniper
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Sniper
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+				Light Machine Gun
+					Smooth Factor
+					Smooth Method
+					Randomize Factor
+					Curve Factor
+			Visibility
+				Shared
+					Auto Wall
+					Through Smoke
+				Zeus
+					Auto Wall
+					Through Smoke
+				Pistol
+					Auto Wall
+					Through Smoke
+				Heavy Pistol
+					Auto Wall
+					Through Smoke
+				Submachine Gun
+					Auto Wall
+					Through Smoke
+				Rifle
+					Auto Wall
+					Through Smoke
+				Shotgun
+					Auto Wall
+					Through Smoke
+				Scout
+					Auto Wall
+					Through Smoke
+				Auto Sniper
+					Auto Wall
+					Through Smoke
+				Sniper
+					Auto Wall
+					Through Smoke
+				Light Machine Gun
+					Auto Wall
+					Through Smoke
+			Accuracy
+				Shared
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Zeus
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Pistol
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Heavy Pistol
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Submachine Gun
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Rifle
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Shotgun
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Scout
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Auto Sniper
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Sniper
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+				Light Machine Gun
+					Recoil Control System
+					Horizontal Recoil
+					Vertical Recoil
+					Max backtrack time
+			Target
+				Shared
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Zeus
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Pistol
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Heavy Pistol
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Submachine Gun
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Rifle
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Shotgun
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Scout
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Auto Sniper
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Sniper
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+				Light Machine Gun
+					Minimum FOV Range
+					Maximum FOV Range
+					Non-Sticky Target
+					Target Switch Delay
+					First Shot Delay
+	Ragebot
+		
+		Main
+			Enabled
+			Silent Aim
+			Backtrack
+			Anti-Recoil
+			Anti-Spread
+			Double-Tap
+			Target Selection
+			FOV
+			Knifebot
+			Duck Peek assist
+		Anti-Aim
+			Enabled
+			Pitch Angle
+			Yaw Base
+			Yaw Offset
+			Spin Speed
+			Mouse Override
+				
+					Key
+					Sensitivity
+					Deadzone Color
+					Active Color
+			Silent Actions
+			Suppress Breathing
+		Accuracy
+			Shared
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Zeus
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Pistol
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Heavy Pistol
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Submachine Gun
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Rifle
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Shotgun
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Scout
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Auto Sniper
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Sniper
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+			Light Machine Gun
+				Min Damage
+				Min Damage Options
+					Auto Wall
+					Adaptive Damage
+				Hit Chance
+		Hitbox
+			Shared
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Zeus
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Pistol
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Heavy Pistol
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Submachine Gun
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Rifle
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Shotgun
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Scout
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Auto Sniper
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Sniper
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+			Light Machine Gun
+				Head
+					Priority
+					Exposed
+					Center
+				Body
+					Priority
+					Lethal
+					Exposed
+					Center
+				Limbs
+					Exposed
+					Center
+		Automate
+			Shared
+				Auto Fire
+					Auto Pistol
+					Auto Revolver
+				Auto Scope
+					Scope
+					Unscope
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Zeus
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Pistol
+				Auto Fire
+					Auto Pistol
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Heavy Pistol
+				Auto Fire
+					Auto Pistol
+					Auto Revolver
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Submachine Gun
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Rifle
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Shotgun
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Scout
+				Auto Fire
+					Auto Pistol
+				Auto Scope
+					Scope
+					Unscope
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Auto Sniper
+				Auto Scope
+					Scope
+					Unscope
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Sniper
+				Auto Fire
+					Auto Pistol
+				Auto Scope
+					Scope
+					Unscope
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+			Light Machine Gun
+				Auto Stop
+					Stop
+					Slow Walk
+					Duck
+					Between Shots
+		Auto Peek
+			Enable
+				
+					Key
+					Show indicator
+						
+						
+					Type
+					Maintain Origin
+	Visuals
+		
+		
+		Enemy
+			Overlay
+				
+				Box
+					
+					Style
+					Precision
+					Color
+				Name
+					
+					Color
+					
+				Ammo
+					
+					Ammo Full Color
+					Ammo Empty Color
+					
+				Health
+					
+					Health Bar
+						Health Max Color
+						Health Low Color
+					Health Number
+					
+				Skeleton
+					
+					Color
+				Armor
+					
+					Color
+					
+				Money
+					
+					Color
+					
+				Ping
+					
+					Color
+					
+				Flags
+					
+					Defusing
+						
+					Planting
+						
+					Scoped
+						
+					Reloading
+						
+					Pin Pulled
+						
+					Flashed
+						
+					Has Defuser
+						
+					Has C4
+						
+					
+				Weapon
+					
+					Style
+					Filter
+						Active
+						Inventory
+						Nades
+					Color
+					Important Color
+					
+				Barrel
+					
+					Start
+					End
+			Chams
+				Model Visible
+					
+				Model Occluded
+					
+				Model Glow
+					
+				Attachments Visible
+					
+				Attachments Occluded
+					
+				Ragdoll Visible
+					
+				Ragdoll Occluded
+					
+				Backtrack Visible
+					
+				Backtrack Occluded
+					
+				Shot Visible
+					
+				Shot Occluded
+					
+		Team
+			Overlay
+				
+				Box
+					
+					Style
+					Precision
+					Color
+				Name
+					
+					Color
+					
+				Ammo
+					
+					Ammo Full Color
+					Ammo Empty Color
+					
+				Health
+					
+					Health Bar
+						Health Max Color
+						Health Low Color
+					Health Number
+					
+				Skeleton
+					
+					Color
+				Armor
+					
+					Color
+					
+				Money
+					
+					Color
+					
+				Ping
+					
+					Color
+					
+				Flags
+					
+					Defusing
+						
+					Planting
+						
+					Scoped
+						
+					Reloading
+						
+					Pin Pulled
+						
+					Flashed
+						
+					Has Defuser
+						
+					Has C4
+						
+					
+				Weapon
+					
+					Style
+					Filter
+						Active
+						Inventory
+						Nades
+					Color
+					Important Color
+					
+				Barrel
+					
+					Start
+					End
+			Chams
+				Model Visible
+					
+				Model Occluded
+					
+				Model Glow
+					
+				Attachments Visible
+					
+				Attachments Occluded
+					
+				Ragdoll Visible
+					
+				Ragdoll Occluded
+					
+		Weapon
+			Overlay
+				
+				Box
+					
+					Style
+					Precision
+					Color
+				Name
+					
+					Style
+					Color
+					
+				Nades
+					
+					Name
+					Icon
+					Detonate Timer
+				Ammo
+					
+					Ammo Full Color
+					Ammo Empty Color
+					
+				C4 Timer
+					
+				Defuser
+					
+			Chams
+				Model Visible
+					
+				Model Occluded
+					
+				Model Glow
+					
+		Local
+			Overlay
+				
+				Box
+					
+					Style
+					Precision
+					Color
+				Name
+					
+					Color
+					
+				Ammo
+					
+					Ammo Full Color
+					Ammo Empty Color
+					
+				Health
+					
+					Health Bar
+						Health Max Color
+						Health Low Color
+					Health Number
+					
+				Skeleton
+					
+					Color
+				Armor
+					
+					Color
+					
+				Money
+					
+					Color
+					
+				Ping
+					
+					Color
+					
+				Flags
+					
+					Defusing
+						
+					Planting
+						
+					Scoped
+						
+					Reloading
+						
+					Pin Pulled
+						
+					Flashed
+						
+					Has Defuser
+						
+					Has C4
+						
+					
+				Weapon
+					
+					Style
+					Filter
+						Active
+						Inventory
+						Nades
+					Color
+					Important Color
+					
+				Barrel
+					
+					Start
+					End
+			Chams
+				Model Visible
+					
+				Model Occluded
+					
+				Attachments Visible
+					
+				Attachments Occluded
+					
+				Weapon Visible
+					
+				Weapon Occluded
+					
+				Arms Visible
+					
+				Arms Occluded
+					
+	World
+		
+		Camera
+			Third Person Enable
+			Third Person Distance
+			View FOV
+			Viewmodel FOV
+		Ambience
+			Apply on Main Menu
+			Weather
+				
+					Color Override
+						
+						
+					Intensity
+					Glow
+					Lightning
+					Color Override
+						
+						
+					Intensity
+					Glow
+					Color Override
+						
+					Intensity
+					Color Override
+						
+						
+					Intensity
+					Glow
+					Lightning
+						
+			Skybox
+			World Color
+				
+			Sky Color
+				
+			Clouds Color
+				
+			Sun Color
+				
+			Light Color
+				
+			Explosion Color
+				
+			Fire Color
+				
+			Muzzle Flash Color
+				
+			Smoke Color
+				
+				
+			Override Fog
+				
+					Color
+					Distance
+					Exponent
+		Extra
+			Radar
+			Visualize Aimbot
+				
+			Sniper Crosshair
+			Crosshair Recoil
+				
+			Effects Removal
+				No Flash
+				No Smoke
+				No Recoil
+				No Scope
+				No Scope Overlay
+				No Legs
+				No Sky
+		Helper
+			Wallbang Info
+				Damage
+				Circle
+				Crosshair
+			Out Of View
+			Out Of View Scale
+			Indicators
+				Double-Tap
+				Anti Spread
+				Min Damage
+			Inferno
+				Local
+					
+				Friendly
+					
+				Enemy
+					
+			Smoke
+				
+			Grenade Tracer
+				Local
+					
+				Friendly
+					
+				Enemy
+					
+				Color Fade
+			Grenade Warning
+				Local
+				Friendly
+				Enemy
+			Hit Effects
+				Sound
+				Marker
+			Damage Indicator
+			Kill Effect
+				
+					Primary Color
+					Secondary Color
+					Intensity
+					Dissolve
+			Bullet Tracers
+				Local
+					
+				Friendly
+					
+				Enemy
+					
+	Miscellaneous
+		
+		Features
+			Secure Mode
+			Chat Spam
+			Auto-Accept Match
+			Preserve Killfeed
+			Show Spectators
+			Anti-OBS
+			Show Watermark
+			Quick Plant
+			Straight Throw
+			Log
+				Console
+				Purchases
+				Damage
+		Movement
+			Auto Strafe
+				
+					Speed Boost
+					Air Turn Speed
+			Auto Jump
+			Jump Bug
+			Edge Jump
+			Slow Walk Key
+			Slow Walk Speed
+			Fast ladder
+			Quick Stop
+	Lua Scripts
+		Local
+			
+			
+				Create
+				
+			
+		Security
+			Allow scripts to edit lua files
+			Allow scripts to edit cfg files
+			Allow internet connections
+			Allow game scripting
+			Allow insecure FFI
+			Save Lua Permissions
+		Other
+			Load With Configurations
