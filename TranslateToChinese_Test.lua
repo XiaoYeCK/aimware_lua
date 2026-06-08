@@ -127,8 +127,8 @@ function ValidateOnline(dumpOutput, scriptName)
         return false
     elseif UpdateResult == false then
         NewPrint("AimWare更新")
-        file.Write("EN_Lang.txt", DumpOutput)
-        file.Write("Remote_EN_Lang.txt", http.Get(UpdateCheckURL))
+        file.Write("EN.txt", DumpOutput)
+        file.Write("EN_Old.txt", http.Get(UpdateCheckURL))
         return false
     end
         return true
