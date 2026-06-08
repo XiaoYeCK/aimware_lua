@@ -125,8 +125,9 @@ function ValidateOnline(dumpOutput, scriptName)
 
     if not CompareWithOnline(dumpOutput, CheckUpdateURL) == "Skip" then
         if not CompareWithOnline(dumpOutput, CheckUpdateURL) then
-            file.Write("EN_Lang.txt", DumpOutput)
             NewPrint("AimWare更新")
+            file.Write("EN_Lang.txt", DumpOutput)
+            file.Write("RemoteEN.txt", http.Get(CheckUpdateURL))
             return false -- AimWare更新
         end
     end
