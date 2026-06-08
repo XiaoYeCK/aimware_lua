@@ -1,3 +1,5 @@
+RF=gui.Reference
+
 function DumpGUI()
     output = ""
 
