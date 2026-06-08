@@ -51,10 +51,6 @@ function SD(RF,Description)
     RF:SetDescription(Description)
 end
 
-function FC(...)
-    return RF(...):Children()()
-end
-
 function FCR(RF, Name)
     for child in RF:Children() do
         if child:GetName() == Name then
