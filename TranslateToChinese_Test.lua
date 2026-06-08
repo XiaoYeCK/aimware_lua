@@ -88,6 +88,7 @@ DumpOutput = DumpGUI()
 function FetchURL(url)
     data = http.Get(url)
     if type(data) ~= "string" then
+        NewPrint("请求失败")
         return false -- 请求失败
     end
     return data
@@ -110,14 +111,17 @@ function ValidateOnline(dumpOutput, scriptName)
 
     local result1 = CompareWithOnline(localScript, FileCheckURL)
     if result1 == "Skip" then
+        NewPrint("网络不可用")
         return false -- 网络不可用
     elseif result1 == false then
+        NewPrint("本地与在线文件不一致")
         return false -- 本地与在线文件不一致
     end
 
     if not CompareWithOnline(dumpOutput, CheckUpdateURL) == "Skip" then
         if not CompareWithOnline(dumpOutput, CheckUpdateURL) then
             file.Write("EN_Lang.txt", DumpOutput)
+            NewPrint("AimWare更新")
             return false -- AimWare更新
         end
     end
