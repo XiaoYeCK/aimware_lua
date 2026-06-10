@@ -83,19 +83,22 @@ DumpOutput = DumpGUI()
 
 function FetchURL(url)
     data = http.Get(url)
-    if type(data) ~= "string" then
-        NewPrint("请求失败")
+
+    if not data then
+        NewPrint("请求失败: " .. url)
         return false
     end
+
     return data
 end
 
 function CompareWithOnline(localText, url)
-    if not FetchURL(url) then
+    remote = FetchURL(url)
+
+    if not remote then
         return "Skip"
     end
 
-    remote = FetchURL(url)
     -- 移除换行和空格再检查一致性
     cleanLocal = localText:gsub("[\n\r\t ]", "")
     cleanRemote = remote:gsub("[\n\r\t ]", "")
