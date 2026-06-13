@@ -460,9 +460,15 @@
 		Anti-Aim
 			Enabled
 			Pitch Angle
+			Jitter Range
+			Pitch
 			Yaw Base
 			Yaw Offset
 			Spin Speed
+			Jitter
+				
+					Jitter Style
+					Amount
 			Mouse Override
 				
 					Key
@@ -1173,6 +1179,7 @@
 				Double-Tap
 				Anti Spread
 				Min Damage
+				Secure Mode
 			Inferno
 				Local
 					

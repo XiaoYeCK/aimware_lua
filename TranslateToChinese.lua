@@ -82,14 +82,14 @@ end
 DumpOutput = DumpGUI()
 
 function FetchURL(url)
-    data = http.Get(url)
+    local FetchData = http.Get(url)
 
-    if not data then
+    if not FetchData then
         NewPrint("请求失败: " .. url)
         return false
     end
 
-    return data
+    return FetchData
 end
 
 function CompareWithOnline(localText, url)
@@ -116,18 +116,28 @@ function ValidateOnline(dumpOutput, scriptName)
     if LuaResult == "Skip" then
         return false
     elseif LuaResult == false then
-        NewPrint("自动同步")
-        file.Write(scriptName, http.Get(LuaCheckURL))
-        LoadScript(scriptName)
+        NewPrint("同步在线脚本")
+        local LuaData = FetchURL(LuaCheckURL)
+        if not LuaData then
+            NewPrint("无法获取在线脚本, 请检查网络连接")
+            return false
+        end
+            file.Write(scriptName, LuaData)
+            LoadScript(scriptName)
     end
 
     UpdateResult = CompareWithOnline(dumpOutput, UpdateCheckURL)
     if UpdateResult == "Skip" then
         return false
     elseif UpdateResult == false then
-        NewPrint("AimWare更新")
+        NewPrint("AimWare更新, 请等待汉化更新")
+        local UpdateData = FetchURL(UpdateCheckURL)
+        if not UpdateData then
+            return false
+        end
+        NewPrint("已写入EN.txt和EN_Old.txt, 请对比后更新汉化")
         file.Write("EN.txt", DumpOutput)
-        file.Write("EN_Old.txt", http.Get(UpdateCheckURL))
+        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
         return false
     end
         return true
@@ -780,7 +790,7 @@ function TranslateToChinese()
                 SN(RF("Lua脚本", "其它", "Load With Configurations"), "随参数加载")
                         SD(RF("Lua脚本", "其它", "随参数加载"), "开启后在脚本加载时保存参数, 加载参数时自动加载脚本")
 
-    NewPrint("更新日期: 2026-06-08")
+    NewPrint("更新日期: 2026-06-13(临时版本)")
     NewPrint("汉化状态下保存的参数加载前必须保证相同文件名的汉化脚本在相同相对目录(随参数加载也行)")
     NewPrint("此脚本有概率和代码内包含\"gui.Reference\"字符串的其它脚本冲突导致崩溃(需另适配)")
     NewPrint("Github:XiaoYeCK/aimware_lua")
