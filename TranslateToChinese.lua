@@ -2,6 +2,9 @@
 -- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- Github:XiaoYeCK/aimware_lua
+-- 更新日期: 2026-06-14
+
+callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
 ScriptName = GetScriptName()
 
@@ -9,6 +12,12 @@ LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads
 UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/Check.en"
 
 TargetName = "!汉化.lua"
+
+function NewPrint(...)
+    gui.SetValue("misc.master", true)
+    gui.SetValue("misc.log.console", true)
+    print(...)
+end
 
 if ScriptName ~= TargetName then
     CurrentScript = file.Read(ScriptName)
@@ -18,26 +27,7 @@ if ScriptName ~= TargetName then
     NewPrint("请刷新脚本列表后重新加载")
 end
 
-WeaponList={"Shared",--全局共享
-            "Zeus",--电击枪
-            "Pistol",--手枪
-            "Heavy Pistol",--沙鹰和左轮
-            "Submachine Gun",--冲锋枪
-            "Rifle",--步枪
-            "Shotgun",--霰弹枪
-            "Scout",--鸟狙
-            "Auto Sniper",--连狙
-            "Sniper",--AWP
-            "Light Machine Gun"--机枪
-            }
-
 RF=gui.Reference
-
-function NewPrint(...)
-    gui.SetValue("misc.master", true)
-    gui.SetValue("misc.log.console", true)
-    print(...)
-end
 
 function SN(RF,Name)
     RF:SetName(Name)
@@ -64,86 +54,21 @@ function FCR(RF, Name)
     end
 end
 
-function DumpGUI()
-    output = ""
-
-    function traverse(obj, prefix)
-        output = output .. prefix .. obj:GetName() .. "\n"
-        for child in obj:Children() do
-            traverse(child, prefix .. "\t")
-        end
-    end
-
-    traverse(RF(), "")
-
-    return output
-end
-
-DumpOutput = DumpGUI()
-
-function FetchURL(url)
-    local FetchData = http.Get(url)
-
-    if not FetchData then
-        NewPrint("请求失败: " .. url)
-        return false
-    end
-
-    return FetchData
-end
-
-function CompareWithOnline(localText, url)
-    remote = FetchURL(url)
-
-    if not remote then
-        return "Skip"
-    end
-
-    -- 移除换行和空格再检查一致性
-    cleanLocal = localText:gsub("[\n\r\t ]", "")
-    cleanRemote = remote:gsub("[\n\r\t ]", "")
-    
-    if cleanRemote ~= cleanLocal then
-        return false
-    end
-    return true
-end
-
-function ValidateOnline(dumpOutput, scriptName)
-    localScript = file.Read(scriptName)
-
-    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
-    if LuaResult == "Skip" then
-        return false
-    elseif LuaResult == false then
-        NewPrint("同步在线脚本")
-        local LuaData = FetchURL(LuaCheckURL)
-        if not LuaData then
-            NewPrint("无法获取在线脚本, 请检查网络连接")
-            return false
-        end
-            file.Write(scriptName, LuaData)
-            LoadScript(scriptName)
-    end
-
-    UpdateResult = CompareWithOnline(dumpOutput, UpdateCheckURL)
-    if UpdateResult == "Skip" then
-        return false
-    elseif UpdateResult == false then
-        NewPrint("AimWare更新, 请等待汉化更新")
-        local UpdateData = FetchURL(UpdateCheckURL)
-        if not UpdateData then
-            return false
-        end
-        NewPrint("已写入EN.txt和EN_Old.txt, 请对比后更新汉化")
-        file.Write("EN.txt", DumpOutput)
-        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
-        return false
-    end
-        return true
-end
-
 function TranslateToChinese()
+
+    WeaponList={"Shared",--全局共享
+            "Zeus",--电击枪
+            "Pistol",--手枪
+            "Heavy Pistol",--沙鹰和左轮
+            "Submachine Gun",--冲锋枪
+            "Rifle",--步枪
+            "Shotgun",--霰弹枪
+            "Scout",--鸟狙
+            "Auto Sniper",--连狙
+            "Sniper",--AWP
+            "Light Machine Gun"--机枪
+    }
+
     SN(FCR(RF(), "Dpi Scale"), "界面缩放比例")
         SD(FCR(RF(), "界面缩放比例"), "调整界面缩放比例, 以适应不同分辨率")
         SO(FCR(RF(), "界面缩放比例"), "75%",
@@ -302,7 +227,11 @@ function TranslateToChinese()
                SD(RF("暴力", "反自瞄", "总开关"), "启用反自瞄")
             SN(RF("暴力", "反自瞄", "Pitch Angle"), "俯仰角度")
                 SD(RF("暴力", "反自瞄", "俯仰角度"), "无需描述")
-                SO(RF("暴力", "反自瞄", "俯仰角度"), "禁用", "低头", "抬头")
+                SO(RF("暴力", "反自瞄", "俯仰角度"), "禁用", "低头", "抬头", "抖动", "自定义")
+            SN(RF("暴力", "反自瞄", "Jitter Range"), "俯仰抖动范围")
+                SD(RF("暴力", "反自瞄", "俯仰抖动范围"), "无需描述")
+            SN(RF("暴力", "反自瞄", "Pitch"), "自定义俯仰角度")
+                SD(RF("暴力", "反自瞄", "自定义俯仰角度"), "无需描述")
             SN(RF("暴力", "反自瞄", "Yaw Base"), "偏航模式")
                 SD(RF("暴力", "反自瞄", "偏航模式"), "无需描述")
                 SO(RF("暴力", "反自瞄", "偏航模式"), "禁用", "基于目标", "基于视角", "旋转")
@@ -310,6 +239,12 @@ function TranslateToChinese()
                 SD(RF("暴力", "反自瞄", "偏航偏移"), "无需描述")
             SN(RF("暴力", "反自瞄", "Spin Speed"), "偏航角度转速")
                 SD(RF("暴力", "反自瞄", "偏航角度转速"), "RPM: 每分钟旋转圈数")
+            SN(RF("暴力", "反自瞄", "Jitter"), "偏航抖动")
+                SN(FCR(RF("暴力", "反自瞄", "偏航抖动"), "Jitter Style"), "抖动模式")
+                    SD(FCR(RF("暴力", "反自瞄", "偏航抖动"), "抖动模式"), "选择偏航抖动的工作模式")
+                    SO(FCR(RF("暴力", "反自瞄", "偏航抖动"), "抖动模式"), "中心", "偏移", "钟摆")
+                SN(FCR(RF("暴力", "反自瞄", "偏航抖动"), "Amount"), "抖动范围")
+                    SD(FCR(RF("暴力", "反自瞄", "偏航抖动"), "抖动范围"), "调整偏航抖动的范围")
             SN(RF("暴力", "反自瞄", "Mouse Override"), "鼠标控制")
                 SN(FCR(RF("暴力", "反自瞄", "鼠标控制"), "Key"), "热键")
                     SD(FCR(RF("暴力", "反自瞄", "鼠标控制"), "热键"), "按住热键时鼠标控制反自瞄")
@@ -683,6 +618,7 @@ function TranslateToChinese()
                         SN(RF("视觉", "辅助", "指示器", "Double-Tap"), "双发速射")
                         SN(RF("视觉", "辅助", "指示器", "Anti Spread"), "扩散预测与无扩散")
                         SN(RF("视觉", "辅助", "指示器", "Min Damage"), "最低伤害")
+                        SN(RF("视觉", "辅助", "指示器", "Secure Mode"), "安全模式")
                 SN(RF("视觉", "辅助", "Inferno"), "显示燃烧弹范围")
                         SD(RF("视觉", "辅助", "显示燃烧弹范围"), "燃烧弹蔓延范围")
                         SN(RF("视觉", "辅助", "显示燃烧弹范围", "Local"), "自身")
@@ -790,12 +726,40 @@ function TranslateToChinese()
                 SN(RF("Lua脚本", "其它", "Load With Configurations"), "随参数加载")
                         SD(RF("Lua脚本", "其它", "随参数加载"), "开启后在脚本加载时保存参数, 加载参数时自动加载脚本")
 
-    NewPrint("更新日期: 2026-06-13(临时版本)")
     NewPrint("汉化状态下保存的参数加载前必须保证相同文件名的汉化脚本在相同相对目录(随参数加载也行)")
     NewPrint("此脚本有概率和代码内包含\"gui.Reference\"字符串的其它脚本冲突导致崩溃(需另适配)")
     NewPrint("Github:XiaoYeCK/aimware_lua")
+    NewPrint("更新日期: 2026-06-14")
 
     gui.SetValue("lua.savecfg", true)
+end
+
+function DumpGUI()
+    output = ""
+
+    function traverse(obj, prefix)
+        output = output .. prefix .. obj:GetName() .. "\n"
+        for child in obj:Children() do
+            traverse(child, prefix .. "\t")
+        end
+    end
+
+    traverse(RF(), "")
+
+    return output
+end
+
+DumpOutput = DumpGUI()
+
+function FetchURL(url)
+    local FetchData = http.Get(url)
+
+    if not FetchData then
+        NewPrint("请求失败: " .. url)
+        return false
+    end
+
+    return FetchData
 end
 
 function NonASCII(str)
@@ -812,10 +776,59 @@ function CheckTranslated()
     return NonASCII(DumpOutput)
 end
 
-if not CheckTranslated() and ValidateOnline(DumpOutput, ScriptName) then
+function CompareWithOnline(localText, url)
+    remote = FetchURL(url)
+
+    if not remote then
+        return "Skip"
+    end
+
+    -- 移除换行和空格再检查一致性
+    cleanLocal = localText:gsub("[\n\r\t ]", "")
+    cleanRemote = remote:gsub("[\n\r\t ]", "")
+    
+    if cleanRemote ~= cleanLocal then
+        return false
+    end
+    return true
+end
+
+function ValidateOnline()
+    localScript = file.Read(ScriptName)
+
+    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
+    if LuaResult == "Skip" then
+        return false
+    elseif LuaResult == false then
+        NewPrint("同步在线脚本")
+        local LuaData = FetchURL(LuaCheckURL)
+        if not LuaData then
+            NewPrint("无法获取在线脚本, 请检查网络连接")
+            return false
+        end
+            file.Write(ScriptName, LuaData)
+            LoadScript(ScriptName)
+    end
+
+    UpdateResult = CompareWithOnline(DumpOutput, UpdateCheckURL)
+    if UpdateResult == "Skip" then
+        return false
+    elseif UpdateResult == false then
+        NewPrint("AimWare更新, 请等待汉化更新")
+        local UpdateData = FetchURL(UpdateCheckURL)
+        if not UpdateData then
+            return false
+        end
+        NewPrint("已写入EN.txt和EN_Old.txt, 请对比后更新汉化")
+        file.Write("EN.txt", DumpOutput)
+        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
+        return false
+    end
+        return true
+end
+
+if not CheckTranslated() and ValidateOnline() then
     TranslateToChinese()
 else
     NewPrint("汉化已阻止")
 end
-
-callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
