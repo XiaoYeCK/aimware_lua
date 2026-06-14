@@ -726,7 +726,7 @@ function TranslateToChinese()
                 SN(RF("Lua脚本", "其它", "Load With Configurations"), "随参数加载")
                         SD(RF("Lua脚本", "其它", "随参数加载"), "开启后在脚本加载时保存参数, 加载参数时自动加载脚本")
 
-    NewPrint("汉化状态下保存的参数加载前必须保证相同文件名的汉化脚本在相同相对目录(随参数加载也行)")
+    NewPrint("汉化状态下保存的参数必须先汉化再加载, 分发时也需要带汉化脚本(未汉化加载参数不完整)")
     NewPrint("此脚本有概率和代码内包含\"gui.Reference\"字符串的其它脚本冲突导致崩溃(需另适配)")
     NewPrint("Github:XiaoYeCK/aimware_lua")
     NewPrint("更新日期: 2026-06-14")
