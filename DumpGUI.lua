@@ -15,4 +15,4 @@ function DumpGUI()
     return output
 end
 
-file.Write("EN_Lang.txt", DumpGUI())
+file.Write("DumpGUI.txt", DumpGUI())
