@@ -1,15 +1,20 @@
 -- AimWare V6 CS2 汉化
 -- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
--- Github:XiaoYeCK/aimware_lua
--- 更新日期: 2026-06-14
+-- https://aimware.net/forum/thread/179941
+
+UpdateTime = "2026-06-25 (UTC+8)"
+
+Notice = "挂QQ号2397825783借钱砍价买参(且提出试用参数)高价倒卖, 倒卖免费资源"
+
+Space = " "
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
 ScriptName = GetScriptName()
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/main/Check.en"
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/TranslateToChinese.lua"
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/Check.en"
 
 TargetName = "!汉化.lua"
 
@@ -52,6 +57,99 @@ function FCR(RF, Name)
             return found
         end
     end
+end
+
+function DumpGUI()
+    output = ""
+
+    function traverse(obj, prefix)
+        output = output .. prefix .. obj:GetName() .. "\n"
+        for child in obj:Children() do
+            traverse(child, prefix .. "\t")
+        end
+    end
+
+    traverse(RF(), "")
+
+    return output
+end
+
+DumpOutput = DumpGUI()
+
+function FetchURL(url)
+    FetchData = http.Get(url)
+
+    if not FetchData then
+        NewPrint("请求失败:" .. Space .. url)
+        return false
+    end
+
+    return FetchData
+end
+
+function NonASCII(str)
+    for i = 1, #str do
+        byteVal = string.byte(str, i)
+        if byteVal > 127 then
+            return true
+        end
+    end
+    return false
+end
+
+function CheckTranslated()
+    return NonASCII(DumpOutput)
+end
+
+function CompareWithOnline(localText, url)
+    remote = FetchURL(url)
+
+    if not remote then
+        return "Skip"
+    end
+
+    -- 移除换行和空格再检查一致性
+    cleanLocal = localText:gsub("[\n\r\t ]", "")
+    cleanRemote = remote:gsub("[\n\r\t ]", "")
+    
+    if cleanRemote ~= cleanLocal then
+        return false
+    end
+    return true
+end
+
+function ValidateOnline()
+    localScript = file.Read(ScriptName)
+
+    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
+    if LuaResult == "Skip" then
+        return false
+    elseif LuaResult == false then
+        NewPrint("同步在线脚本")
+        LuaData = FetchURL(LuaCheckURL)
+        if not LuaData then
+            NewPrint("无法获取在线脚本, 请检查网络连接")
+            return false
+        end
+            file.Write(ScriptName, LuaData)
+            LoadScript(ScriptName)
+    end
+
+    UpdateResult = CompareWithOnline(DumpOutput, UpdateCheckURL)
+    if UpdateResult == "Skip" then
+        return false
+    elseif UpdateResult == false then
+        NewPrint("AimWare更新, 请等待汉化更新")
+        UpdateData = FetchURL(UpdateCheckURL)
+        if not UpdateData then
+            return false
+        end
+        NewPrint("已写入EN.txt和EN_Old.txt, 请对比后更新汉化")
+        file.Write("EN.txt", DumpOutput)
+        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
+        return false
+    end
+        return true
 end
 
 function TranslateToChinese()
@@ -256,8 +354,8 @@ function TranslateToChinese()
                     SD(FCR(RF("暴力", "反自瞄", "鼠标控制"), "激活颜色"), "当鼠标控制反自瞄时, 鼠标在死区外则完全开启反自瞄, 显示为该颜色")
             SN(RF("暴力", "反自瞄", "Silent Actions"), "禁用校正")
                 SD(RF("暴力", "反自瞄", "禁用校正"), "HvH用, 无1Tick校正")
-            SN(RF("暴力", "反自瞄", "Suppress Breathing"), "抑制呼吸")
-                SD(RF("暴力", "反自瞄", "抑制呼吸"), "HvH用, 作用未知")
+            SN(RF("暴力", "反自瞄", "Suppress Breathing"), "移除呼吸")
+                SD(RF("暴力", "反自瞄", "移除呼吸"), "HvH用, 移除自身呼吸动作")
         SN(RF("暴力", "Auto Peek"), "自动Peek")
             SN(RF("暴力", "自动Peek", "Enable"), "总开关")
                 SD(RF("暴力", "自动Peek", "总开关"), "启用自动Peek")
@@ -728,103 +826,11 @@ function TranslateToChinese()
 
     NewPrint("汉化状态下保存的参数必须先汉化再加载, 分发时也需要带汉化脚本(未汉化加载参数不完整)")
     NewPrint("此脚本有概率和代码内包含\"gui.Reference\"字符串的其它脚本冲突导致崩溃(需另适配)")
-    NewPrint("Github:XiaoYeCK/aimware_lua")
-    NewPrint("更新日期: 2026-06-14")
+    NewPrint("更新日期:" .. Space .. UpdateTime .. Space .. Notice)
 
     gui.SetValue("lua.savecfg", true)
-end
 
-function DumpGUI()
-    output = ""
-
-    function traverse(obj, prefix)
-        output = output .. prefix .. obj:GetName() .. "\n"
-        for child in obj:Children() do
-            traverse(child, prefix .. "\t")
-        end
-    end
-
-    traverse(RF(), "")
-
-    return output
-end
-
-DumpOutput = DumpGUI()
-
-function FetchURL(url)
-    local FetchData = http.Get(url)
-
-    if not FetchData then
-        NewPrint("请求失败: " .. url)
-        return false
-    end
-
-    return FetchData
-end
-
-function NonASCII(str)
-    for i = 1, #str do
-        byteVal = string.byte(str, i)
-        if byteVal > 127 then
-            return true
-        end
-    end
-    return false
-end
-
-function CheckTranslated()
-    return NonASCII(DumpOutput)
-end
-
-function CompareWithOnline(localText, url)
-    remote = FetchURL(url)
-
-    if not remote then
-        return "Skip"
-    end
-
-    -- 移除换行和空格再检查一致性
-    cleanLocal = localText:gsub("[\n\r\t ]", "")
-    cleanRemote = remote:gsub("[\n\r\t ]", "")
-    
-    if cleanRemote ~= cleanLocal then
-        return false
-    end
-    return true
-end
-
-function ValidateOnline()
-    localScript = file.Read(ScriptName)
-
-    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
-    if LuaResult == "Skip" then
-        return false
-    elseif LuaResult == false then
-        NewPrint("同步在线脚本")
-        local LuaData = FetchURL(LuaCheckURL)
-        if not LuaData then
-            NewPrint("无法获取在线脚本, 请检查网络连接")
-            return false
-        end
-            file.Write(ScriptName, LuaData)
-            LoadScript(ScriptName)
-    end
-
-    UpdateResult = CompareWithOnline(DumpOutput, UpdateCheckURL)
-    if UpdateResult == "Skip" then
-        return false
-    elseif UpdateResult == false then
-        NewPrint("AimWare更新, 请等待汉化更新")
-        local UpdateData = FetchURL(UpdateCheckURL)
-        if not UpdateData then
-            return false
-        end
-        NewPrint("已写入EN.txt和EN_Old.txt, 请对比后更新汉化")
-        file.Write("EN.txt", DumpOutput)
-        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
-        return false
-    end
-        return true
+    file.Write("CN.txt", DumpGUI())
 end
 
 if not CheckTranslated() and ValidateOnline() then
