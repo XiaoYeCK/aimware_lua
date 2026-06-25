@@ -3,9 +3,9 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- https://aimware.net/forum/thread/179941
 
-UpdateTime = "2026-06-22 (UTC+8) TEST-1"
+UpdateTime = "2026-06-25 (UTC+8) TEST-1"
 
-Notice = ""
+Notice = "挂QQ号2397825783借钱砍价买参(且提出试用参数)高价倒卖, 倒卖免费资源"
 
 Space = " "
 
