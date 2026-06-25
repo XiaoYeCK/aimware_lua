@@ -3,7 +3,7 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- https://aimware.net/forum/thread/179941
 
-UpdateTime = "2026-06-25 (UTC+8) TEST-2"
+UpdateTime = "2026-06-25 (UTC+8) TEST-3"
 
 Notice = ""
 
@@ -825,7 +825,7 @@ function TranslateToChinese()
                         SD(RF("Lua脚本", "其它", "随参数加载"), "开启后在脚本加载时保存参数, 加载参数时自动加载脚本")
 
     NewPrint("更新日期:" .. Space .. UpdateTime)
-    if Notice then
+    if Notice ~= "" then
         NewPrint("公告:".. Space .. Notice)
     end
 
