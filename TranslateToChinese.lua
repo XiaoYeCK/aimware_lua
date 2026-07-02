@@ -3,8 +3,8 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- https://aimware.net/forum/thread/179941
 
-UpdateInfo = "2026-06-25 (UTC+8) TEST-7"
-Notice = "挂QQ号2397825783借钱砍价买参(且提出试用参数)高价倒卖, 倒卖免费资源, 多个圈钱指控"
+UpdateInfo = "2026-07-02 (UTC+8) TEST-1"
+Notice = "挂QQ号 2397825783 多个圈钱指控"
 
 Space = " "
 Enter = "\n"
