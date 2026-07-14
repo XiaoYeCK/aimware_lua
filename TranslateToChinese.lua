@@ -3,6 +3,7 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- 本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
 -- https://aimware.net/forum/thread/179941
+-- https://github.com/XiaoYeCK/aimware_lua
 
 UpdateInfo = "2026-07-14 (UTC+8) MAIN-3"
 Notice = "挂QQ号 2397825783 倒卖本脚本, 本脚本在AW官方论坛发布, 免费开源"
