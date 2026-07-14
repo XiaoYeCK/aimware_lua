@@ -3,8 +3,8 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- https://aimware.net/forum/thread/179941
 
-UpdateInfo = "2026-07-02 (UTC+8) TEST-1"
-Notice = "挂QQ号 2397825783 多个圈钱指控"
+UpdateInfo = "2026-07-14 (UTC+8) TEST-1"
+Notice = "挂QQ号 2397825783 倒卖本脚本, 本脚本在AW官方论坛发布, 免费开源"
 
 Space = " "
 Enter = "\n"
