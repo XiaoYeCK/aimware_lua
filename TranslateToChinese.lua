@@ -3,7 +3,7 @@
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- https://aimware.net/forum/thread/179941
 
-UpdateInfo = "2026-07-14 (UTC+8) TEST-1"
+UpdateInfo = "2026-07-14 (UTC+8) TEST-2"
 Notice = "挂QQ号 2397825783 倒卖本脚本, 本脚本在AW官方论坛发布, 免费开源"
 
 Space = " "
@@ -228,12 +228,13 @@ function TranslateToChinese()
             SN(RF("合法", "扳机", "Weapon"), "武器")
                 for i = 1, 11, 1 do
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "Trigger Delay"), "扳机延迟")
+                        SD(RF("合法", "扳机", "武器", WeaponList[i], "扳机延迟"), "准星在目标身上时间大于等于该值时才开火")
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "Trigger Burst"), "扳机连发时间")
                         SD(RF("合法", "扳机", "武器", WeaponList[i], "扳机连发时间"), "值不为0时, 扳机触发后连发")
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "Hit Chance"), "最低命中率")
                         SD(RF("合法", "扳机", "武器", WeaponList[i], "最低命中率"), "命中率大于等于该值时才开火")
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "Max backtrack time"), "最高回溯时间")
-                        SD(RF("合法", "扳机", "武器", WeaponList[i], "最高回溯时间"), "无需描述")
+                        SD(RF("合法", "扳机", "武器", WeaponList[i], "最高回溯时间"), "扳机回溯的时间长度, 击中敌人之前的位置也造成伤害")
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "Accuracy"), "提高命中率")
                         SD(RF("合法", "扳机", "武器", WeaponList[i], "提高命中率"), "启用可提高命中率")
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "提高命中率", "Anti-Recoil"), "考虑后坐")
@@ -262,7 +263,7 @@ function TranslateToChinese()
                     SN(RF("合法", "武器", "压枪", WeaponList[i], "Vertical Recoil"), "垂直压枪")
                         SD(RF("合法", "武器", "压枪", WeaponList[i], "垂直压枪"), "抵消垂直后坐")
                    SN(RF("合法", "武器", "压枪", WeaponList[i], "Max backtrack time"), "最高回溯时间")
-                       SD(RF("合法", "武器", "压枪", WeaponList[i], "最高回溯时间"), "无需描述")
+                       SD(RF("合法", "武器", "压枪", WeaponList[i], "最高回溯时间"), "自瞄回溯的时间长度, 击中敌人之前的位置也造成伤害")
                 end
             SN(RF("合法", "武器", "Target"), "目标")
                 for i = 1, 11, 1 do
