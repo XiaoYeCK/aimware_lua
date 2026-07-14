@@ -4,7 +4,7 @@
 -- 本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
 -- https://aimware.net/forum/thread/179941
 
-UpdateInfo = "2026-07-14 (UTC+8) MAIN-2"
+UpdateInfo = "2026-07-14 (UTC+8) MAIN-3"
 Notice = "挂QQ号 2397825783 倒卖本脚本, 本脚本在AW官方论坛发布, 免费开源"
 
 Space = " "
@@ -15,8 +15,8 @@ callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持
 
 ScriptName = GetScriptName()
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/Check.en"
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/TranslateToChinese.lua"
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/Check.en"
 
 TargetName = "!汉化.lua"
 
