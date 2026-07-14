@@ -1,9 +1,10 @@
 -- AimWare V6 CS2 汉化
 -- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
+-- 本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
 -- https://aimware.net/forum/thread/179941
 
-UpdateInfo = "2026-07-14 (UTC+8) MAIN-1"
+UpdateInfo = "2026-07-14 (UTC+8) MAIN-2"
 Notice = "挂QQ号 2397825783 倒卖本脚本, 本脚本在AW官方论坛发布, 免费开源"
 
 Space = " "
@@ -14,8 +15,8 @@ callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持
 
 ScriptName = GetScriptName()
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/Check.en"
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/TranslateToChinese.lua"
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/Check.en"
 
 TargetName = "!汉化.lua"
 
@@ -140,7 +141,7 @@ function ValidateOnline()
     if UpdateResult == "Skip" then
         return false
     elseif UpdateResult == false then
-        NewPrint("AimWare更新, 请等待汉化更新")
+        NewPrint("AimWare更新, 请等待汉化更新, 催更请发送电子邮件至 update@xiaoyecloud.asia (仅限催更), 论坛发布页不常看")
         UpdateData = FetchURL(UpdateCheckURL)
         if not UpdateData then
             return false
@@ -188,7 +189,7 @@ function TranslateToChinese()
     SN(FCR(RF(), "Console Key"), "控制台热键")
         SD(FCR(RF(), "控制台热键"), "设置开关控制台热键")
     SN(FCR(RF(), "Show Binds"), "显示绑定状态")
-        SD(FCR(RF(), "显示绑定状态"), "在新的界面 (可拖动) 显示绑定了按键的功能的状态 (开关/选项/数值)")
+        SD(FCR(RF(), "显示绑定状态"), "在新的界面 (可拖动) 显示绑定了按键的功能的状态 (开关 / 选项 / 数值)")
         SO(FCR(RF(), "显示绑定状态"), "关闭", "变量", "名称", "短名")
     SN(FCR(RF(), "Show UI Hints"), "显示功能描述")
         SD(FCR(RF(), "显示功能描述"), "指针悬停在功能名上时显示描述")
