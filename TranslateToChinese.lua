@@ -1,12 +1,17 @@
 -- AimWare V6 CS2 汉化
+
 -- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
 -- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
 -- 本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
+
+-- 本项目基于 GNU Affero General Public License v3.0 (AGPL‑v3.0) 开源
+-- 您可以自由地使用、修改、分发源代码，但必须遵守 AGPL‑v3.0 协议的条款
+
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-08-11 (UTC+8) TEST-1"
-Notice = "汉化脚本在AW官方论坛免费发布, 在GitHub开源"-- TODO: Notice_1, _2, _n
+UpdateInfo = "2026-08-11 (UTC+8) TEST-2"
+Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
 Enter = "\n"
@@ -838,7 +843,7 @@ function TranslateToChinese()
     end
 
     NewPrint("汉化状态下保存的参数必须先汉化再加载, 分发时也需要带汉化脚本(未汉化加载参数不完整)")
-    NewPrint("汉化脚本有可能跟包含\"gui.Reference\"的其它脚本冲突导致游戏崩溃(需另适配)")
+    NewPrint("汉化脚本有可能跟包含\"gui.Reference\"的其它脚本冲突导致游戏崩溃, 请谨慎加载, 崩溃问题需额外适配")
 
     gui.SetValue("lua.savecfg", true)
 
