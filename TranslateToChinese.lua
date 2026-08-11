@@ -5,8 +5,8 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-07-14 (UTC+8) TEST-3"
-Notice = "挂QQ号 2397825783 倒卖本脚本, 本脚本在AW官方论坛发布, 免费开源"
+UpdateInfo = "2026-08-11 (UTC+8) TEST-1"
+Notice = "汉化脚本在AW官方论坛免费发布, 在GitHub开源"-- TODO: Notice_1, _2, _n
 
 Space = " "
 Enter = "\n"
@@ -31,7 +31,7 @@ if ScriptName ~= TargetName then
     CurrentScript = file.Read(ScriptName)
     file.Write(TargetName, CurrentScript)
     file.Delete(ScriptName)
-    NewPrint("脚本已重命名为: " .. TargetName)
+    NewPrint("脚本已重命名为:" .. Space .. TargetName .. Space .. "(使用感叹号是为了优先加载)")
     NewPrint("请刷新脚本列表后重新加载")
 end
 
@@ -142,12 +142,16 @@ function ValidateOnline()
     if UpdateResult == "Skip" then
         return false
     elseif UpdateResult == false then
-        NewPrint("AimWare更新, 请等待汉化更新, 催更请发送电子邮件至 update@xiaoyecloud.asia (仅限催更), 论坛发布页不常看")
+        NewPrint("检查未通过")
+
+        NewPrint("若是AimWare更新, 请等待汉化更新, 催更请发送电子邮件至 update@xiaoyecloud.asia (仅限催更), 论坛发布页不常看")
+        NewPrint("也可能是在此之前加载的其它脚本导致, 影响检查结果的脚本通常包含\"gui.Reference\"")
+
         UpdateData = FetchURL(UpdateCheckURL)
         if not UpdateData then
             return false
         end
-        NewPrint("已写入EN.txt和EN_Old.txt, 请对比后更新汉化")
+        NewPrint("已写入EN.txt和EN_Old.txt")
         file.Write("EN.txt", DumpOutput)
         file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
         return false
@@ -157,17 +161,17 @@ end
 
 function TranslateToChinese()
 
-    WeaponList={"Shared",--全局共享
-            "Zeus",--电击枪
-            "Pistol",--手枪
-            "Heavy Pistol",--沙鹰和左轮
-            "Submachine Gun",--冲锋枪
-            "Rifle",--步枪
-            "Shotgun",--霰弹枪
-            "Scout",--鸟狙
-            "Auto Sniper",--连狙
-            "Sniper",--AWP
-            "Light Machine Gun"--机枪
+    WeaponList={"Shared",-- 全局共享
+            "Zeus",-- 电击枪
+            "Pistol",-- 手枪
+            "Heavy Pistol",-- 沙鹰和左轮
+            "Submachine Gun",-- 冲锋枪
+            "Rifle",-- 步枪
+            "Shotgun",-- 霰弹枪
+            "Scout",-- 鸟狙
+            "Auto Sniper",-- 连狙
+            "Sniper",-- AWP
+            "Light Machine Gun"-- 机枪
     }
 
     SN(FCR(RF(), "Dpi Scale"), "界面缩放比例")
@@ -834,7 +838,7 @@ function TranslateToChinese()
     end
 
     NewPrint("汉化状态下保存的参数必须先汉化再加载, 分发时也需要带汉化脚本(未汉化加载参数不完整)")
-    NewPrint("此脚本有概率和代码内包含\"gui.Reference\"字符串的其它脚本冲突导致崩溃(需另适配)")
+    NewPrint("汉化脚本有可能跟包含\"gui.Reference\"的其它脚本冲突导致游戏崩溃(需另适配)")
 
     gui.SetValue("lua.savecfg", true)
 
