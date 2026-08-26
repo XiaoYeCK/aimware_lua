@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-08-26 (UTC+8) TEST-1"
+UpdateInfo = "2026-08-26 (UTC+8) TEST-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -772,6 +772,27 @@ function TranslateToChinese()
                         SN(RF("视觉", "辅助", "显示子弹轨迹", "Enemy"), "敌人")
 
     SN(RF("Inventory"), "库存")
+
+        InvRenameMap = {
+            ["Name"] = "名称",
+            ["Seed"] = "种子",
+            ["Wear"] = "磨损",
+            ["StatTrak"] = "StatTrak 计数",
+            ["Colors"] = "颜色",
+            ["Extra Colors"] = "额外颜色"
+        }
+
+        function RenameInvChildren(parent)
+            for child in parent:Children() do
+                oldName = child:GetName()
+                if InvRenameMap[oldName] then
+                    SN(child, InvRenameMap[oldName])
+                end
+                RenameInvChildren(child)
+            end
+        end
+
+        RenameInvChildren(RF("库存"))
 
     SN(RF("Miscellaneous"), "杂项")
         SN(RF("杂项", "Features"), "功能")
