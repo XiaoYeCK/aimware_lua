@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-08-11 (UTC+8) MAIN-1"
+UpdateInfo = "2026-08-27 (UTC+8) MAIN-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -40,6 +40,7 @@ if ScriptName ~= TargetName then
     NewPrint("请刷新脚本列表后重新加载")
 end
 
+--<->
 RF=gui.Reference
 
 function SN(RF,Name)
@@ -66,6 +67,7 @@ function FCR(RF, Name)
         end
     end
 end
+--<->
 
 function DumpGUI()
     output = ""
@@ -313,6 +315,8 @@ function TranslateToChinese()
         SN(RF("暴力", "Main"), "主要")
             SN(RF("暴力", "主要", "Enabled"), "总开关")
                 SD(RF("暴力", "主要", "总开关"), "启用无平滑自瞄(自动开火)")
+            SN(RF("暴力", "主要", "Refine Shot"), "射击优化")
+                --SD(RF("暴力", "主要", "射击优化"), "待补充")
             SN(RF("暴力", "主要", "Silent Aim"), "静默自瞄")
                 SD(RF("暴力", "主要", "静默自瞄"), "自瞄不会更改你的视角")
             SN(RF("暴力", "主要", "Backtrack"), "射击回溯")
@@ -766,6 +770,29 @@ function TranslateToChinese()
                         SN(RF("视觉", "辅助", "显示子弹轨迹", "Local"), "自身")
                         SN(RF("视觉", "辅助", "显示子弹轨迹", "Friendly"), "友军")
                         SN(RF("视觉", "辅助", "显示子弹轨迹", "Enemy"), "敌人")
+
+    SN(RF("Inventory"), "库存")
+
+        InvRenameMap = {
+            ["Name"] = "名称",
+            ["Seed"] = "种子",
+            ["Wear"] = "磨损",
+            ["StatTrak"] = "StatTrak 计数",
+            ["Colors"] = "颜色",
+            ["Extra Colors"] = "额外颜色"
+        }
+
+        function RenameInvChildren(parent)
+            for child in parent:Children() do
+                oldName = child:GetName()
+                if InvRenameMap[oldName] then
+                    SN(child, InvRenameMap[oldName])
+                end
+                RenameInvChildren(child)
+            end
+        end
+
+        RenameInvChildren(RF("库存"))
 
     SN(RF("Miscellaneous"), "杂项")
         SN(RF("杂项", "Features"), "功能")

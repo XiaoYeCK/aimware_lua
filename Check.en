@@ -448,6 +448,7 @@
 		
 		Main
 			Enabled
+			Refine Shot
 			Silent Aim
 			Backtrack
 			Anti-Recoil
@@ -1218,6 +1219,113 @@
 					
 				Enemy
 					
+	Inventory
+		
+		
+			
+				Name
+				Seed
+				Wear
+				StatTrak
+				Colors
+					
+					
+					
+					
+				Extra Colors
+					
+					
+					
+					
+			
+			
+		
+			
+				Name
+				Seed
+				Wear
+				StatTrak
+				Colors
+					
+					
+					
+					
+				Extra Colors
+					
+					
+					
+					
+			
+			
+		
+			
+				
+					Name
+					Seed
+					Wear
+					StatTrak
+					Colors
+						
+						
+						
+						
+					Extra Colors
+						
+						
+						
+						
+				
+				
+			
+				
+				
+				
+		
+			
+				
+					Name
+					Seed
+					Wear
+					StatTrak
+					Colors
+						
+						
+						
+						
+					Extra Colors
+						
+						
+						
+						
+				
+				
+			
+				
+				
+				
+		
+			
+				
+					Name
+					Seed
+					Wear
+					StatTrak
+					Colors
+						
+						
+						
+						
+					Extra Colors
+						
+						
+						
+						
+				
+				
+			
+				
+				
+				
 	Miscellaneous
 		
 		Features
