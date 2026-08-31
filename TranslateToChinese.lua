@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-08-31 (UTC+8) MAIN-1"
+UpdateInfo = "2026-08-31 (UTC+8) MAIN-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
