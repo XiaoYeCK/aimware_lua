@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-08-31 (UTC+8) TEST-1"
+UpdateInfo = "2026-08-31 (UTC+8) TEST-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -705,8 +705,8 @@ function TranslateToChinese()
                         SD(RF("视觉", "增强", "显示可击中部位"), "显示敌人可造成伤害的部位")
                 SN(RF("视觉", "增强", "Sniper Crosshair"), "狙击枪准星")
                         SD(RF("视觉", "增强", "狙击枪准星"), "显示狙击枪准星")
-                SN(RF("视觉", "增强", "Bullet Impacts"), "__")
-                        SD(RF("视觉", "增强", "子弹击中效果"), "(测试时崩溃)")
+                --SN(RF("视觉", "增强", "Bullet Impacts"), "__")
+                        SD(RF("视觉", "增强", "Bullet Impacts"), "(测试时崩溃)")
                 SN(RF("视觉", "增强", "Crosshair Recoil"), "可视扩散")
                         SD(RF("视觉", "增强", "可视扩散"), "显示扩散范围")
                         SO(RF("视觉", "增强", "可视扩散"), "关闭", "圆环1", "渐变", "圆环2")
