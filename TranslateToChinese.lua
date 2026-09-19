@@ -168,6 +168,7 @@ end
 
 function TranslateToChinese()
 
+--<->
     WeaponList={"Shared",-- 全局共享
             "Zeus",-- 电击枪
             "Pistol",-- 手枪
@@ -893,6 +894,7 @@ function TranslateToChinese()
         SN(RF("Lua脚本", "Other"), "其它")
                 SN(RF("Lua脚本", "其它", "Load With Configurations"), "随参数加载")
                         SD(RF("Lua脚本", "其它", "随参数加载"), "开启后在脚本加载时保存参数, 加载参数时自动加载脚本")
+--<->
 
     NewPrint("版本:" .. Space .. UpdateInfo)
     if Notice ~= "" then
