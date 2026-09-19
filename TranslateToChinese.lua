@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-19 (UTC+8) TEST-1"
+UpdateInfo = "2026-09-19 (UTC+8) TEST-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -287,7 +287,7 @@ function TranslateToChinese()
                    SN(RF("合法", "武器", "准度", WeaponList[i], "Max backtrack time"), "最高回溯时间")
                        SD(RF("合法", "武器", "准度", WeaponList[i], "最高回溯时间"), "自瞄回溯的时间长度, 击中敌人曾经的位置也造成伤害")
                     SN(RF("合法", "武器", "准度", WeaponList[i], "Auto Stop"), "自动急停")
-                        SD(RF("合法", " weapons", "准度", WeaponList[i], "自动急停"), "自动急停以提高精度")
+                        SD(RF("合法", "武器", "准度", WeaponList[i], "自动急停"), "自动急停以提高精度")
                 end
             SN(RF("合法", "武器", "Target"), "目标")
                 for i = 1, 11, 1 do
