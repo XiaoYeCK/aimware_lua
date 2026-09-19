@@ -21,51 +21,63 @@
 			Main
 				Enable
 				Aim Key
+				Auto aim
 				Auto Pistol Interval
 			Hitbox Selection
 				Shared
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Zeus
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Pistol
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Heavy Pistol
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Submachine Gun
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Rifle
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Shotgun
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Scout
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Auto Sniper
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Sniper
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 				Light Machine Gun
 					
 					Hitbox Advance Multiplier
+					Min Damage
 					Nearest To Crosshair
 		Triggerbot
 			Main
@@ -77,91 +89,102 @@
 				Shared
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Zeus
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Pistol
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Heavy Pistol
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Submachine Gun
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Rifle
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Shotgun
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Scout
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Auto Sniper
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Sniper
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 				Light Machine Gun
 					Trigger Delay
 					Trigger Burst
+					Reaction Time
 					Hit Chance
 					Max backtrack time
 					Accuracy
 						Anti-Recoil
-						Anti-Spread
+					Anti-Spread Type
 			Visibility
 				Shared
 					Auto Wall
@@ -327,56 +350,67 @@
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Zeus
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Pistol
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Heavy Pistol
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Submachine Gun
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Rifle
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Shotgun
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Scout
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Auto Sniper
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Sniper
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 				Light Machine Gun
 					Recoil Control System
 					Horizontal Recoil
 					Vertical Recoil
 					Max backtrack time
+					Auto Stop
 			Target
 				Shared
 					Minimum FOV Range
@@ -449,11 +483,13 @@
 		Main
 			Enabled
 			Refine Shot
+			Double Precision
 			Silent Aim
 			Backtrack
 			Anti-Recoil
 			Anti-Spread
 			Double-Tap
+			Max extrapolation ticks
 			Target Selection
 			FOV
 			Knifebot
@@ -476,6 +512,8 @@
 					Sensitivity
 					Deadzone Color
 					Active Color
+					Yaw Base
+					Allow Jitter
 			Silent Actions
 			Suppress Breathing
 		Accuracy
@@ -1171,6 +1209,9 @@
 				No Flash
 				No Smoke
 				No Recoil
+				No Landing Bob
+				No Local Team ID
+				No Team ID
 				No Scope
 				No Scope Overlay
 				No Legs
