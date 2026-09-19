@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-19 (UTC+8) TEST-3"
+UpdateInfo = "2026-09-19 (UTC+8) TEST-4"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -733,6 +733,8 @@ function TranslateToChinese()
                         SD(FCR(RF("视觉", "增强", "子弹落点"), "服务器颜色"), "调整服务器子弹落点颜色")
                     SN(FCR(RF("视觉", "增强", "子弹落点"), "Size"), "尺寸")
                         SD(FCR(RF("视觉", "增强", "子弹落点"), "尺寸"), "调整显示的子弹落点尺寸")
+                    SN(FCR(RF("视觉", "增强", "子弹落点"), "Duration"), "持续时长")
+                        SD(FCR(RF("视觉", "增强", "子弹落点"), "持续时长"), "调整子弹落点显示持续时长")
                 SN(RF("视觉", "增强", "Crosshair Recoil"), "射击准度可视化模式")
                         SD(RF("视觉", "增强", "射击准度可视化模式"), "选择直观显示射击准度的模式")
                         SO(RF("视觉", "增强", "射击准度可视化模式"), "禁用", "线条", "渐变", "命中率线条")
