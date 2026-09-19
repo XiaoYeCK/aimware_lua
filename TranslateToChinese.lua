@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-19 (UTC+8) MAIN-1"
+UpdateInfo = "2026-09-19 (UTC+8) MAIN-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -872,8 +872,8 @@ function TranslateToChinese()
                         SD(RF("杂项", "移动", "慢走热键"), "按住设定的热键时慢走生效")
                 SN(RF("杂项", "移动", "Slow Walk Speed"), "慢走速度")
                         SD(RF("杂项", "移动", "慢走速度"), "按住热键时按设定百分比调整移速")
-                SN(RF("杂项", "移动", "Fast Ladder"), "快速爬梯")
-                        SD(RF("杂项", "移动", "快速爬梯"), "加快爬梯速度")
+                SN(RF("杂项", "移动", "Fast Ladder"), "[失效] 快速爬梯")
+                        SD(RF("杂项", "移动", "[失效] 快速爬梯"), "加快爬梯速度")
                 SN(RF("杂项", "移动", "Quick Stop"), "快速急停")
                         SD(RF("杂项", "移动", "快速急停"), "松开移动键时快速急停")
 
