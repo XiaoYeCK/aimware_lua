@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-19 (UTC+8) MAIN-2"
+UpdateInfo = "2026-09-19 (UTC+8) MAIN-3"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -387,6 +387,7 @@ function TranslateToChinese()
                     SD(FCR(RF("暴力", "反瞄准", "鼠标控制"), "激活颜色"), "指示箭头在死区外的颜色。当按住热键时, 指示箭头在死区外则改变偏航角度")
                 SN(FCR(RF("暴力", "反瞄准", "鼠标控制"), "Yaw Base"), "偏航角度基准模式")
                     SD(FCR(RF("暴力", "反瞄准", "鼠标控制"), "偏航角度基准模式"), "当鼠标控制偏航角度时, 偏航角度以此为基准")
+                    SO(FCR(RF("暴力", "反瞄准", "鼠标控制"), "偏航角度基准模式"), "静态", "基于目标", "基于视角")
                 SN(FCR(RF("暴力", "反瞄准", "鼠标控制"), "Allow Jitter"), "允许偏航角度抖动")
                     SD(FCR(RF("暴力", "反瞄准", "鼠标控制"), "允许偏航角度抖动"), "当鼠标控制偏航角度时, 允许偏航角度抖动")
             SN(RF("暴力", "反瞄准", "Silent Actions"), "静默动作")
