@@ -13,8 +13,6 @@ gui.Command("alias")
 
 gui.Editbox(RF("杂项", "功能"), "editbox_name", "Editbox")
 
-gui.Groupbox(RF("杂项"), "Groupbox", 450, 400, 100)
-
 gui.Keybox(RF("杂项", "功能"), "keybox_name", "Keybox", 1)
 
 gui.Listbox(RF("杂项", "功能"), "listbox", 200, "Item 1")
