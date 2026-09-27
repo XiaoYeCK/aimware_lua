@@ -19,7 +19,9 @@ gui.Keybox(RF("杂项", "功能"), "keybox_name", "Keybox", 1)
 
 gui.Listbox(RF("杂项", "功能"), "listbox", 200, "Item 1")
 
-gui.Multibox(RF("杂项"), "Multibox")
+gui.Multibox(RF("杂项", "功能"), "Multibox")
+gui.Checkbox(RF("杂项", "功能", "Multibox"), "checkbox_name", "Checkbox1", true)
+gui.Checkbox(RF("杂项", "功能", "Multibox"), "checkbox_name", "Checkbox2", false)
 
 gui.Slider(RF("杂项", "功能"), "slider_name", "Slider", 5.0, 0.0, 10.0, 0.01)
 
