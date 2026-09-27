@@ -1,5 +1,8 @@
 RF=gui.Reference
 
+-- 创建一个独立窗口
+local exampleWindow = gui.Window("example_window", "示例窗口", 100, 100, 400, 300)
+
 gui.Button(RF("杂项", "功能"), "Botton Name", function()
  end)
 
