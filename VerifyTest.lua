@@ -20,6 +20,9 @@ http.Get(GITHUB_LIST_URL, function(data)
 
     if UserList[MyUserName] then
         --- DEBUG: Print a message to console if the user is verified
-        print("I Love U")
+        print("I LOVE U")
+    else
+        --- DEBUG: Print a message to console if the user is not verified
+        print("FUCK U LOSER")
     end
 end)
