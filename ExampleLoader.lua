@@ -72,7 +72,7 @@ function ValidateOnline()
 end
 
 function CorePayload()
-    NewPrint("已加载脚本:" .. Space .. ScriptName)
+    NewPrint("已加载脚本")
 end
 
 if ValidateOnline() then
