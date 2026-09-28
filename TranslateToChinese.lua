@@ -37,7 +37,9 @@ if ScriptName ~= TargetName then
     file.Write(TargetName, CurrentScript)
     file.Delete(ScriptName)
     NewPrint("脚本已重命名为:" .. Space .. TargetName .. Space .. "(使用感叹号是为了优先加载)")
-    NewPrint("请刷新脚本列表后重新加载")
+    NewPrint("请刷新脚本列表后手动重载")
+    -- 已加载脚本文件名和改动后不一致无法自行重载，若一致则可以
+    -- 后续可以识别是否是TargetName，如果原名称和TargetName一致直接重载，不一致才提示刷新列表手动重载
 end
 
 --<->
