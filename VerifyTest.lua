@@ -1,8 +1,8 @@
-local userName = cheat.GetUserName()
+MyUserName = cheat.GetUserName()
 
-print("Your ID is " .. userName)
+print("Your ID is " .. MyUserName)
 
-local GITHUB_LIST_URL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/UserList"
+GITHUB_LIST_URL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/UserList"
 
 http.Get(GITHUB_LIST_URL, function(data)
 
@@ -10,13 +10,13 @@ http.Get(GITHUB_LIST_URL, function(data)
 
     if not data then return end
 
-    local userList = {}
+    UserList = {}
 
     for id in string.gmatch(data, '"(.-)"') do
-        userList[id] = true
+        UserList[id] = true
     end
 
-    if userList[userName] then
+    if UserList[MyUserName] then
         print("I Love U")
     end
 end)
