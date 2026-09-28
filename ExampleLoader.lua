@@ -2,7 +2,7 @@ callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持
 
 ScriptName = GetScriptName()
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/ExampleLoader.lua"
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/refs/heads/test/ExampleLoader.lua"
 
 TargetName = "ExampleLoader.lua"
 
