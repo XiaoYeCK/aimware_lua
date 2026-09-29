@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-29 (UTC+8) TEST-2"
+UpdateInfo = "2026-09-29 (UTC+8) TEST-3"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -158,7 +158,7 @@ function ValidateOnline()
     if UpdateResult == "Skip" then
         return false
     elseif UpdateResult == false then
-        NewPrint("检查未通过")
+        NewPrint("检查未通过")-- TODO: 套NonASCII检查
 
         NewPrint("若是AimWare更新, 请等待汉化更新, 催更请发送电子邮件至 update@xiaoyecloud.asia (仅限催更), 论坛发布页不常看")
         NewPrint("也可能是在此之前加载的其它脚本导致, 影响检查结果的脚本通常包含\"gui.Reference\"")
