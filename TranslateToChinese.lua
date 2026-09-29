@@ -21,8 +21,15 @@ callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持
 
 ScriptName = GetScriptName()
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/test/Check.en"
+Branches = {
+    "main",
+    "test"
+}
+
+ThisBranch = "test"
+
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
 
 TargetName = "!汉化.lua"
 
@@ -160,6 +167,7 @@ function ValidateOnline()
         if not UpdateData then
             return false
         end
+        -- if
         NewPrint("已写入EN.txt和EN_Old.txt")
         file.Write("EN.txt", DumpOutput)
         file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
