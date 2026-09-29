@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-29 (UTC+8) TEST-1"
+UpdateInfo = "2026-09-29 (UTC+8) TEST-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -925,7 +925,7 @@ function TranslateToChinese()
     file.Write("CN.txt", DumpGUI())
 end
 
-if not CheckTranslated() and ValidateOnline() then
+if ValidateOnline() and not CheckTranslated() then
     TranslateToChinese()
 else
     NewPrint("汉化已阻止")
