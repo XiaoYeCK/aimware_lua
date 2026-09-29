@@ -10,7 +10,7 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-19 (UTC+8) TEST-5"
+UpdateInfo = "2026-09-29 (UTC+8) TEST-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Space = " "
@@ -167,10 +167,13 @@ function ValidateOnline()
         if not UpdateData then
             return false
         end
-        -- if
-        NewPrint("已写入EN.txt和EN_Old.txt")
+
         file.Write("EN.txt", DumpOutput)
-        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
+        NewPrint("已写入EN.txt")
+
+        file.Write("EN_Old.txt", UpdateData)
+        NewPrint("已写入EN_Old.txt")
+
         return false
     end
         return true
