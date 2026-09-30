@@ -10,16 +10,10 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-29 (UTC+8) TEST-3"
-Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
-
-Space = " "
-Enter = "\n"
-Tab = "\t"
-
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-ScriptName = GetScriptName()
+UpdateInfo = "2026-09-30 (UTC+8) TEST-1"
+Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
     "main",
@@ -31,7 +25,13 @@ ThisBranch = "test"
 LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
 UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
 
+ScriptName = GetScriptName()
+
 TargetName = "!汉化.lua"
+
+Space = " "
+Enter = "\n"
+Tab = "\t"
 
 function NewPrint(...)
     gui.SetValue("misc.master", true)
