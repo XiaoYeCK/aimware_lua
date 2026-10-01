@@ -12,7 +12,7 @@
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-09-30 (UTC+8) TEST-1"
+UpdateInfo = "2026-10-01 (UTC+8) TEST-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -925,7 +925,7 @@ function TranslateToChinese()
     file.Write("CN.txt", DumpGUI())
 end
 
-if ValidateOnline() and not CheckTranslated() then
+if not CheckTranslated() and ValidateOnline() then
     TranslateToChinese()
 else
     NewPrint("汉化已阻止")
