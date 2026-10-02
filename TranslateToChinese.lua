@@ -12,7 +12,7 @@
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-10-02 (UTC+8) main-1"
+UpdateInfo = "2026-10-02 (UTC+8) main-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -351,7 +351,7 @@ function TranslateToChinese()
                 SD(RF("暴力", "常规", "无后坐"), "抵消武器后坐")
             SN(RF("暴力", "常规", "Anti-Spread Mode"), "扩散处理")
                 SD(RF("暴力", "常规", "扩散处理"), "选择处理扩散的方式")
-                SO(RF("暴力", "常规", "扩散处理"), "无", "预测", "移除")
+                SO(RF("暴力", "常规", "扩散处理"), "无", "移除", "预测")
             SN(RF("暴力", "常规", "Double-Tap"), "双发速射")
                 SD(RF("暴力", "常规", "双发速射"), "充能后短时间射出两发, 不受总开关影响")
             SN(RF("暴力", "常规", "Max extrapolation ticks"), "最大预测Tick数")
