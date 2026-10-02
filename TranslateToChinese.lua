@@ -12,7 +12,7 @@
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-10-02 (UTC+8) TEST-1"
+UpdateInfo = "2026-10-02 (UTC+8) test-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -351,7 +351,7 @@ function TranslateToChinese()
                 SD(RF("暴力", "常规", "无后坐"), "抵消武器后坐")
             SN(RF("暴力", "常规", "Anti-Spread Mode"), "扩散处理")
                 SD(RF("暴力", "常规", "扩散处理"), "选择处理扩散的方式")
-                SO(RF("暴力", "常规", "扩散处理"), "无", "预测", "移除")
+                SO(RF("暴力", "常规", "扩散处理"), "无", "移除", "预测")
             SN(RF("暴力", "常规", "Double-Tap"), "双发速射")
                 SD(RF("暴力", "常规", "双发速射"), "充能后短时间射出两发, 不受总开关影响")
             SN(RF("暴力", "常规", "Max extrapolation ticks"), "最大预测Tick数")
@@ -364,7 +364,7 @@ function TranslateToChinese()
             SN(RF("暴力", "常规", "Knifebot"), "自动刀")
                 SD(RF("暴力", "常规", "自动刀"), "自动刀模式, 不受总开关影响")
                 SO(RF("暴力", "常规", "自动刀"), "关闭", "重击", "仅背刺", "快速")
-            SN(RF("暴力", "常规", "Duck Peek assist"), "[失效] 蹲起Peek辅助")-------------------------------------------------------------------
+            SN(RF("暴力", "常规", "Duck Peek assist"), "[失效] 蹲起Peek辅助")
                 SD(RF("暴力", "常规", "[失效] 蹲起Peek辅助"), "按住蹲下, 若站起时可造成的伤害大于最低伤害, 则自动站起 (自动急停关闭时生效)")
         SN(RF("暴力", "Anti-Aim"), "反瞄准")
             SN(RF("暴力", "反瞄准", "Enabled"), "总开关")
@@ -457,7 +457,7 @@ function TranslateToChinese()
                                 SN(RF("暴力", "自动化", WeaponList[i], "准度", "Stop"), "急停")
                                 SN(RF("暴力", "自动化", WeaponList[i], "准度", "Slow Walk"), "慢走")
                                 SN(RF("暴力", "自动化", WeaponList[i], "准度", "Duck"), "蹲下")
-                                SN(RF("暴力", "自动化", WeaponList[i], "准度", "Between Shots"), "[失效] 射击间隔急停")-------------------------------------------------------------------
+                                SN(RF("暴力", "自动化", WeaponList[i], "准度", "Between Shots"), "[失效] 射击间隔急停")
                 end
 
                 -- Shared
