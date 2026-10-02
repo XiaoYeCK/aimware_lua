@@ -10,21 +10,28 @@
 -- https://aimware.net/forum/thread/179941
 -- https://github.com/XiaoYeCK/aimware_lua
 
-UpdateInfo = "2026-09-19 (UTC+8) MAIN-3"
+callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
+
+UpdateInfo = "2026-10-02 (UTC+8) main-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
+
+Branches = {
+    "main",
+    "test"
+}
+
+ThisBranch = "main"
+
+LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
+UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
+
+ScriptName = GetScriptName()
+
+TargetName = "!汉化.lua"
 
 Space = " "
 Enter = "\n"
 Tab = "\t"
-
-callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
-
-ScriptName = GetScriptName()
-
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/main/Check.en"
-
-TargetName = "!汉化.lua"
 
 function NewPrint(...)
     gui.SetValue("misc.master", true)
@@ -37,7 +44,9 @@ if ScriptName ~= TargetName then
     file.Write(TargetName, CurrentScript)
     file.Delete(ScriptName)
     NewPrint("脚本已重命名为:" .. Space .. TargetName .. Space .. "(使用感叹号是为了优先加载)")
-    NewPrint("请刷新脚本列表后重新加载")
+    NewPrint("请刷新脚本列表后手动重载")
+    -- 已加载脚本文件名和改动后不一致无法自行重载，若一致则可以
+    -- 后续可以识别是否是TargetName，如果原名称和TargetName一致直接重载，不一致才提示刷新列表手动重载
 end
 
 --<->
@@ -158,9 +167,13 @@ function ValidateOnline()
         if not UpdateData then
             return false
         end
-        NewPrint("已写入EN.txt和EN_Old.txt")
+
         file.Write("EN.txt", DumpOutput)
-        file.Write("EN_Old.txt", FetchURL(UpdateCheckURL))
+        NewPrint("已写入EN.txt")
+
+        file.Write("EN_Old.txt", UpdateData)
+        NewPrint("已写入EN_Old.txt")
+
         return false
     end
         return true
@@ -259,8 +272,8 @@ function TranslateToChinese()
                         SD(RF("合法", "扳机", "武器", WeaponList[i], "准度"), "启用以提高准度")
                         SN(RF("合法", "扳机", "武器", WeaponList[i], "准度", "Anti-Recoil"), "考虑后坐")
                     SN(RF("合法", "扳机", "武器", WeaponList[i], "Anti-Spread Type"), "扩散处理")
-                        SD(RF("合法", "扳机", "武器", WeaponList[i], "扩散处理"), "选择扳机处理扩散的方式")
-                        SO(RF("合法", "扳机", "武器", WeaponList[i], "扩散处理"), "禁用", "扩散预测", "无扩散")
+                        SD(RF("合法", "扳机", "武器", WeaponList[i], "扩散处理"), "选择处理扩散的方式")
+                        SO(RF("合法", "扳机", "武器", WeaponList[i], "扩散处理"), "无", "预测", "移除")
                 end
             SN(RF("合法", "扳机", "Visibility"), "可见性")
                 for i = 1, 11, 1 do
@@ -336,8 +349,9 @@ function TranslateToChinese()
                 SD(RF("暴力", "常规", "射击回溯"), "击中敌人曾经的位置也造成伤害")
             SN(RF("暴力", "常规", "Anti-Recoil"), "无后坐")
                 SD(RF("暴力", "常规", "无后坐"), "抵消武器后坐")
-            SN(RF("暴力", "常规", "Anti-Spread"), "无扩散")
-                SD(RF("暴力", "常规", "无扩散"), "移除武器扩散")
+            SN(RF("暴力", "常规", "Anti-Spread Mode"), "扩散处理")
+                SD(RF("暴力", "常规", "扩散处理"), "选择处理扩散的方式")
+                SO(RF("暴力", "常规", "扩散处理"), "无", "预测", "移除")
             SN(RF("暴力", "常规", "Double-Tap"), "双发速射")
                 SD(RF("暴力", "常规", "双发速射"), "充能后短时间射出两发, 不受总开关影响")
             SN(RF("暴力", "常规", "Max extrapolation ticks"), "最大预测Tick数")
