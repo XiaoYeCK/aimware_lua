@@ -35,26 +35,37 @@ else
     translated = false
 end
 
-if translated then
-    ref = gui.Reference("杂项", "功能")
-else
-    ref = gui.Reference("Miscellaneous", "Features")
+function TranslatedOutput(chinese, english)
+    local text = translated and chinese or english
+    local results = {}
+
+    for value in string.gmatch(text, "([^,]+)") do
+        value = string.gsub(value, "^%s+", "")
+        value = string.gsub(value, "%s+$", "")
+
+        value = string.gsub(value, "^'", "")
+        value = string.gsub(value, "'$", "")
+
+        table.insert(results, value)
+    end
+
+    return unpack(results)
 end
 
-if translated then
-    ex_indicator = gui.Multibox(ref, "增强指示器")
-else
-    ex_indicator = gui.Multibox(ref, "ExIndicator")
-end
+ref = gui.Reference(
+    TranslatedOutput("'杂项', '功能'", "'Miscellaneous', 'Features'")
+)
+
+ex_indicator = gui.Multibox(ref, TranslatedOutput("增强指示器", "ExIndicator"))
 
 items_parent = ex_indicator or ref
 
-ind_ragebot  = gui.Checkbox(items_parent, "mi_ragebot",  "Ragebot",  false)
-ind_legitbot = gui.Checkbox(items_parent, "mi_legitbot", "Legitbot", false)
-ind_seed     = gui.Checkbox(items_parent, "mi_seed",     "Seed",     false)
-ind_fns      = gui.Checkbox(items_parent, "mi_fns",      "FNS",      false)
-ind_aw       = gui.Checkbox(items_parent, "mi_aw",       "Triggerbot Auto Wall", false)
-ind_ts       = gui.Checkbox(items_parent, "mi_ts",       "Triggerbot Through Smoke", false)
+ind_ragebot  = gui.Checkbox(items_parent, "mi_ragebot",  TranslatedOutput("暴力", "Ragebot"),  false)
+ind_legitbot = gui.Checkbox(items_parent, "mi_legitbot", TranslatedOutput("合法", "Legitbot"), false)
+ind_seed     = gui.Checkbox(items_parent, "mi_seed",     TranslatedOutput("种子", "Seed"),     false)
+ind_fns      = gui.Checkbox(items_parent, "mi_fns",      TranslatedOutput("无扩散", "FNS"),      false)
+ind_aw       = gui.Checkbox(items_parent, "mi_aw",       TranslatedOutput("扳机穿墙", "Triggerbot Auto Wall"), false)
+ind_ts       = gui.Checkbox(items_parent, "mi_ts",       TranslatedOutput("扳机穿烟", "Triggerbot Through Smoke"), false)
 
 local cp_ragebot  = gui.ColorPicker(ind_ragebot,  "mi_ragebot_color",  "Color", 145, 196, 68, 255)
 local cp_legitbot = gui.ColorPicker(ind_legitbot, "mi_legitbot_color", "Color", 145, 196, 68, 255)
@@ -62,7 +73,8 @@ local cp_seed     = gui.ColorPicker(ind_seed,     "mi_seed_color",     "Color", 
 local cp_fns      = gui.ColorPicker(ind_fns,      "mi_fns_color",      "Color", 145, 196, 68, 255)
 local cp_aw       = gui.ColorPicker(ind_aw,       "mi_aw_color",       "Color", 145, 196, 68, 255)
 local cp_ts       = gui.ColorPicker(ind_ts,       "mi_ts_color",       "Color", 145, 196, 68, 255)
-local ind_scale    = gui.Slider(ref, "mi_scale", "Indicator Size", 1.0, 0.5, 2.0, 0.05)
+
+local ind_scale    = gui.Slider(ref, "mi_scale", TranslatedOutput("指示器大小", "Indicator Size"), 1.0, 0.5, 2.0, 0.05)
 
 local function truthy(v)
     return v ~= nil and v ~= false and v ~= 0
