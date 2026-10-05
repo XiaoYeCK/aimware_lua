@@ -42,19 +42,20 @@ else
 end
 
 if translated then
-    more_indicator = gui.Multibox(ref, "增强指示器")
+    ex_indicator = gui.Multibox(ref, "增强指示器")
 else
-    more_indicator = gui.Multibox(ref, "ExIndicator")
+    ex_indicator = gui.Multibox(ref, "ExIndicator")
 end
 
-local items_parent = more_indicator or ref
+items_parent = ex_indicator or ref
 
-local ind_ragebot  = gui.Checkbox(items_parent, "mi_ragebot",  "Ragebot",  false)
-local ind_legitbot = gui.Checkbox(items_parent, "mi_legitbot", "Legitbot", false)
-local ind_seed     = gui.Checkbox(items_parent, "mi_seed",     "Seed",     false)
-local ind_fns      = gui.Checkbox(items_parent, "mi_fns",      "FNS",      false)
-local ind_aw       = gui.Checkbox(items_parent, "mi_aw",       "Triggerbot Auto Wall", false)
-local ind_ts       = gui.Checkbox(items_parent, "mi_ts",       "Triggerbot Through Smoke", false)
+ind_ragebot  = gui.Checkbox(items_parent, "mi_ragebot",  "Ragebot",  false)
+ind_legitbot = gui.Checkbox(items_parent, "mi_legitbot", "Legitbot", false)
+ind_seed     = gui.Checkbox(items_parent, "mi_seed",     "Seed",     false)
+ind_fns      = gui.Checkbox(items_parent, "mi_fns",      "FNS",      false)
+ind_aw       = gui.Checkbox(items_parent, "mi_aw",       "Triggerbot Auto Wall", false)
+ind_ts       = gui.Checkbox(items_parent, "mi_ts",       "Triggerbot Through Smoke", false)
+
 local cp_ragebot  = gui.ColorPicker(ind_ragebot,  "mi_ragebot_color",  "Color", 145, 196, 68, 255)
 local cp_legitbot = gui.ColorPicker(ind_legitbot, "mi_legitbot_color", "Color", 145, 196, 68, 255)
 local cp_seed     = gui.ColorPicker(ind_seed,     "mi_seed_color",     "Color", 145, 196, 68, 255)
