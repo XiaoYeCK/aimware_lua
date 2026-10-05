@@ -1,14 +1,53 @@
-local ref = gui.Reference("Miscellaneous", "Features")
-if ref == nil then
-    print("[MoreIndicator] gui.Reference failed")
-    return
+RF=gui.Reference
+
+function DumpGUI()
+    output = ""
+
+    function traverse(obj, prefix)
+        output = output .. prefix .. obj:GetName() .. "\n"
+        for child in obj:Children() do
+            traverse(child, prefix .. "\t")
+        end
+    end
+
+    traverse(RF(), "")
+
+    return output
 end
 
-local more_indicator = gui.Multibox(ref, "More Indicator")
-local items_parent = more_indicator or ref
-if more_indicator == nil then
-    print("[MoreIndicator] Multibox Create Failed")
+function NonASCII(str)
+    for i = 1, #str do
+        byteVal = string.byte(str, i)
+        if byteVal > 127 then
+            return true
+        end
+    end
+    return false
 end
+
+function CheckTranslated()
+    return NonASCII(DumpGUI())
+end
+
+if CheckTranslated() then
+    translated = true
+else
+    translated = false
+end
+
+if translated then
+    ref = gui.Reference("杂项", "功能")
+else
+    ref = gui.Reference("Miscellaneous", "Features")
+end
+
+if translated then
+    more_indicator = gui.Multibox(ref, "增强指示器")
+else
+    more_indicator = gui.Multibox(ref, "ExIndicator")
+end
+
+local items_parent = more_indicator or ref
 
 local ind_ragebot  = gui.Checkbox(items_parent, "mi_ragebot",  "Ragebot",  false)
 local ind_legitbot = gui.Checkbox(items_parent, "mi_legitbot", "Legitbot", false)
