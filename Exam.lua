@@ -1,4 +1,10 @@
-RF = gui.Reference
+GUIRef = gui.Reference
+
+function ExPrint(...)
+    gui.SetValue("misc.master", true)
+    gui.SetValue("misc.log.console", true)
+    print(... .. "\n")
+end
 
 function DumpGUI()
     output = ""
@@ -10,12 +16,12 @@ function DumpGUI()
         end
     end
 
-    traverse(RF(), "")
+    traverse(GUIRef(), "")
 
     return output
 end
 
-function NonASCII(str)
+function CheckASCII(str)
     for i = 1, #str do
         byteVal = string.byte(str, i)
         if byteVal > 127 then
@@ -26,7 +32,7 @@ function NonASCII(str)
 end
 
 function CheckTranslated()
-    return NonASCII(DumpGUI())
+    return CheckASCII(DumpGUI())
 end
 
 if CheckTranslated() then
@@ -37,23 +43,17 @@ else
     print("[CheckTranslated] false")
 end
 
-function TranslatedOutput(chinese, english)
-    local text = translated and chinese or english
-    local results = {}
-
-    for value in string.gmatch(text, "([^,]+)") do
-        value = string.gsub(value, "^%s+", "")
-        value = string.gsub(value, "%s+$", "")
-
-        value = string.gsub(value, "^'", "")
-        value = string.gsub(value, "'$", "")
-
-        table.insert(results, value)
-    end
-
-    return unpack(results)
+-- Select Localized Args
+function SLA(chinese, english)
+    local results = translated and chinese or english
+    return (table.unpack or unpack)(results)
 end
 
-BaseRF = RF(
-    TranslatedOutput("'杂项', '功能'", "'Miscellaneous', 'Features'")
+BaseRef = GUIRef(
+    SLA(
+        {"杂项", "功能"},
+        {"Miscellaneous", "Features"}
+    )
 )
+
+print(SLA({"中文"}, {"English"}))
