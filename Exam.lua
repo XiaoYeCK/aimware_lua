@@ -37,10 +37,10 @@ end
 
 if CheckTranslated() then
     translated = true
-    print("[CheckTranslated] true")
+    ExPrint("[CheckTranslated] true")
 else
     translated = false
-    print("[CheckTranslated] false")
+    ExPrint("[CheckTranslated] false")
 end
 
 -- Select Localized Args
@@ -56,4 +56,4 @@ BaseRef = GUIRef(
     )
 )
 
-print(SLA({"中文"}, {"English"}))
+ExPrint(SLA({"中文"}, {"English"}))
