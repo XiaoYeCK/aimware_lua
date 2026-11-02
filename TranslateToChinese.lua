@@ -22,6 +22,11 @@ Branches = {
 
 ThisBranch = "test"
 
+Lines = {
+    "raw.githubusercontent.com",
+    "raw.githubusercontent.proxy.unkhax.top"
+}
+
 LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
 UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
 
