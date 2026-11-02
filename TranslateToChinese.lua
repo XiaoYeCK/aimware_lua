@@ -23,12 +23,12 @@ Branches = {
 ThisBranch = "test"
 
 Lines = {
-    "raw.githubusercontent.com",
-    "raw.githubusercontent.proxy.unkhax.top"
+    "https://raw.githubusercontent.com",
+    "https://raw.githubusercontent.proxy.unkhax.top"
 }
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
+LuaCheckPath = "/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
+UpdateCheckPath = "/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
 
 ScriptName = GetScriptName()
 
@@ -100,16 +100,32 @@ end
 
 DumpOutput = DumpGUI()
 
-function FetchURL(url)
-    FetchData = http.Get(url)
+-- /*
+function FetchURL(urlOrLines, path)
+    if path then
+        for _, line in ipairs(urlOrLines) do
+            local requestURL = line .. path
+            local fetchData = http.Get(requestURL)
 
-    if not FetchData then
-        NewPrint("请求失败:" .. Space .. url)
+            if fetchData then
+                return fetchData
+            end
+
+            NewPrint("请求失败:" .. Space .. requestURL)
+        end
+
         return false
     end
 
-    return FetchData
+    local fetchData = http.Get(urlOrLines)
+    if not fetchData then
+        NewPrint("请求失败:" .. Space .. urlOrLines)
+        return false
+    end
+
+    return fetchData
 end
+-- */
 
 function NonASCII(str)
     for i = 1, #str do
@@ -125,8 +141,8 @@ function CheckTranslated()
     return NonASCII(DumpOutput)
 end
 
-function CompareWithOnline(localText, url)
-    remote = FetchURL(url)
+function CompareWithOnline(localText, urlOrLines, path)
+    remote = FetchURL(urlOrLines, path)
 
     if not remote then
         return "Skip"
@@ -145,12 +161,12 @@ end
 function ValidateOnline()
     localScript = file.Read(ScriptName)
 
-    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
+    LuaResult = CompareWithOnline(localScript, Lines, LuaCheckPath)
     if LuaResult == "Skip" then
         return false
     elseif LuaResult == false then
         NewPrint("同步在线脚本")
-        LuaData = FetchURL(LuaCheckURL)
+        LuaData = FetchURL(Lines, LuaCheckPath)
         if not LuaData then
             NewPrint("无法获取在线脚本, 请检查网络连接")
             return false
@@ -159,7 +175,7 @@ function ValidateOnline()
             LoadScript(ScriptName)
     end
 
-    UpdateResult = CompareWithOnline(DumpOutput, UpdateCheckURL)
+    UpdateResult = CompareWithOnline(DumpOutput, Lines, UpdateCheckPath)
     if UpdateResult == "Skip" then
         return false
     elseif UpdateResult == false then
@@ -168,7 +184,7 @@ function ValidateOnline()
         NewPrint("若是AimWare更新, 请等待汉化更新, 催更请发送电子邮件至 update@xiaoyecloud.asia (仅限催更), 论坛发布页不常看")
         NewPrint("也可能是在此之前加载的其它脚本导致, 影响检查结果的脚本通常包含\"gui.Reference\"")
 
-        UpdateData = FetchURL(UpdateCheckURL)
+        UpdateData = FetchURL(Lines, UpdateCheckPath)
         if not UpdateData then
             return false
         end
