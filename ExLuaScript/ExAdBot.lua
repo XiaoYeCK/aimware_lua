@@ -3,8 +3,10 @@ RF = gui.Reference
 LastSendTime = 0
 LastTeamSwitchTime = 0
 CurrentTeam = 2
-CurrentBuybotOption = 2
+CurrentPrimaryBuybotOption = 2
+CurrentSecondaryBuybotOption = 2
 LastSpamEnable = false
+LastScoreboardEnable = false
 
 function SD(RF, Description)
     RF:SetDescription(Description)
@@ -44,6 +46,15 @@ function SendMsg(team_only, msg)
     end
 end
 
+local function GetBuyCommand(option, current_option, first_option, last_option, commands)
+    if option == 1 then
+        local command = commands[current_option]
+        current_option = current_option == last_option and first_option or current_option + 1
+        return command, current_option
+    end
+    return commands[option] or "", current_option
+end
+
 gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 -----------------------------")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
@@ -55,8 +66,12 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
         SD(RF("杂项", "功能", "切换阵营"), "自动切换阵营")
     gui.Slider(RF("杂项", "功能"), "advanced_spam_admode_switchdelay", "切换间隔", 1.5, 0.1, 30.0, 0.5)
         SD(RF("杂项", "功能", "切换间隔"), "单位: 秒")
-    gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_buybot", "自动购买", "禁用", "轮询", "大狙", "连狙", "鸟狙", "左轮", "沙鹰")
-        SD(RF("杂项", "功能", "自动购买"), "切换阵营时自动购买预设武器")
+    gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_primaryweapon", "自动购买-主武器", "禁用", "轮询", "大狙", "连狙", "鸟狙")
+        SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
+    gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
+        SD(RF("杂项", "功能", "自动购买-副武器"), "切换阵营时购买副武器；轮询仅在副武器中循环")
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
+        SD(RF("杂项", "功能", "显示计分板"), "启用时按住计分板")
 
     gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
         SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
@@ -70,9 +85,16 @@ callbacks.Register("Draw", function()
     team_only = gui.GetValue("misc.advanced_spam_onlyteam")
     admode = gui.GetValue("misc.advanced_spam_admode_switchteam")
     team_delay = gui.GetValue("misc.advanced_spam_admode_switchdelay")
-    buybot_option = gui.GetValue("misc.advanced_spam_admode_buybot")
+    primary_weapon_option = gui.GetValue("misc.advanced_spam_admode_primaryweapon")
+    secondary_weapon_option = gui.GetValue("misc.advanced_spam_admode_secondaryweapon")
+    scoreboard_enable = gui.GetValue("misc.advanced_spam_admode_showscores")
     send_speed = gui.GetValue("misc.advanced_spam_speed")
     msg = gui.GetValue("misc.advanced_spam_msg")
+
+    if scoreboard_enable ~= LastScoreboardEnable then
+        client.Command(scoreboard_enable and "+showscores" or "-showscores")
+        LastScoreboardEnable = scoreboard_enable
+    end
 
     if gui.GetValue("misc.chatspam") then
         RF("杂项", "功能", "广告"):SetValue(false)
@@ -88,24 +110,33 @@ callbacks.Register("Draw", function()
 
     if admode and cur_time - LastTeamSwitchTime >= team_delay then
         CurrentTeam = CurrentTeam == 2 and 3 or 2
-        buy_command = ""
-        selected_buybot_option = buybot_option
-        if buybot_option == 1 then
-            selected_buybot_option = CurrentBuybotOption
-            CurrentBuybotOption = CurrentBuybotOption == 6 and 2 or CurrentBuybotOption + 1
+        local buy_commands = {
+            "jointeam " .. CurrentTeam,
+            "cl_dm_buyrandomweapons 0"
+        }
+        local primary_buy_command
+        primary_buy_command, CurrentPrimaryBuybotOption = GetBuyCommand(
+            primary_weapon_option,
+            CurrentPrimaryBuybotOption,
+            2,
+            4,
+            { [2] = "buy awp", [3] = "buy g3sg1;buy scar20", [4] = "buy ssg08" }
+        )
+        local secondary_buy_command
+        secondary_buy_command, CurrentSecondaryBuybotOption = GetBuyCommand(
+            secondary_weapon_option,
+            CurrentSecondaryBuybotOption,
+            2,
+            3,
+            { [2] = "buy revolver", [3] = "buy deagle" }
+        )
+        if primary_buy_command ~= "" then
+            table.insert(buy_commands, primary_buy_command)
         end
-        if selected_buybot_option == 2 then
-            buy_command = "buy awp"
-        elseif selected_buybot_option == 3 then
-            buy_command = "buy g3sg1;buy scar20"
-        elseif selected_buybot_option == 4 then
-            buy_command = "buy ssg08"
-        elseif selected_buybot_option == 5 then
-            buy_command = "buy revolver"
-        elseif selected_buybot_option == 6 then
-            buy_command = "buy deagle"
+        if secondary_buy_command ~= "" then
+            table.insert(buy_commands, secondary_buy_command)
         end
-        client.Command("jointeam " .. CurrentTeam .. ";" .. buy_command .. ";cl_dm_buyrandomweapons 0")
+        client.Command(table.concat(buy_commands, ";"))
         LastTeamSwitchTime = cur_time
     end
 
