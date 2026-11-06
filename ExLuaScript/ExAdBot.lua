@@ -6,7 +6,6 @@ CurrentTeam = 2
 CurrentPrimaryBuybotOption = 2
 CurrentSecondaryBuybotOption = 2
 LastSpamEnable = false
-LastScoreboardEnable = false
 
 function SD(RF, Description)
     RF:SetDescription(Description)
@@ -91,11 +90,6 @@ callbacks.Register("Draw", function()
     send_speed = gui.GetValue("misc.advanced_spam_speed")
     msg = gui.GetValue("misc.advanced_spam_msg")
 
-    if scoreboard_enable ~= LastScoreboardEnable then
-        client.Command(scoreboard_enable and "+showscores" or "-showscores")
-        LastScoreboardEnable = scoreboard_enable
-    end
-
     if gui.GetValue("misc.chatspam") then
         RF("杂项", "功能", "广告"):SetValue(false)
         gui.SetValue("misc.master", true)
@@ -112,7 +106,8 @@ callbacks.Register("Draw", function()
         CurrentTeam = CurrentTeam == 2 and 3 or 2
         local buy_commands = {
             "jointeam " .. CurrentTeam,
-            "cl_dm_buyrandomweapons 0"
+            "cl_dm_buyrandomweapons 0",
+            scoreboard_enable and "+showscores" or "-showscores"
         }
         local primary_buy_command
         primary_buy_command, CurrentPrimaryBuybotOption = GetBuyCommand(
