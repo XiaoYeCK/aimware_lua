@@ -152,7 +152,7 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     return true
 end
 
-gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 -----------------------------")
+gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ---------------------------")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
         SD(RF("杂项", "功能", "开关"), "启用刷屏")
@@ -174,15 +174,20 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
         SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
     local secondary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
         SD(RF("杂项", "功能", "自动购买-副武器"), "切换阵营时购买副武器；轮询仅在副武器中循环")
+
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
-        SD(RF("杂项", "功能", "显示计分板"), "启用时按住计分板")
+        SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
     gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
         SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
+
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
         SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
+    RF("杂项", "功能", "调试打印"):SetInvisible(true)
+
+gui.Text(RF("杂项", "功能"), "---------------------------------------------------------------")
 
 LastScoreboardEnable = gui.GetValue("misc.advanced_spam_admode_showscores")
 client.AllowListener("weapon_fire")
