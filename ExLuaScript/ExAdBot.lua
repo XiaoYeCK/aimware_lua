@@ -158,6 +158,9 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
         SD(RF("杂项", "功能", "开关"), "启用刷屏")
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_onlyteam", "仅队内", false)
         SD(RF("杂项", "功能", "仅队内"), "仅队内刷屏")
+    gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
+        SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
+    gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_switchteam", "切换阵营", false)
         SD(RF("杂项", "功能", "切换阵营"), "自动切换阵营")
@@ -180,10 +183,6 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
         SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
         SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
-
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
-        SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
-    gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
 
 LastScoreboardEnable = gui.GetValue("misc.advanced_spam_admode_showscores")
 client.AllowListener("weapon_fire")
