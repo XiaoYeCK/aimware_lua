@@ -9,6 +9,12 @@ local LastScoreboardEnable = false
 local KillThrottleWaiting = false
 local DeathsSinceKill = 0
 
+local function DebugPrint(message)
+    if gui.GetValue("misc.advanced_spam_debug") then
+        print("[ExAdBot调试] " .. message)
+    end
+end
+
 function SD(RF, Description)
     RF:SetDescription(Description)
 end
@@ -76,9 +82,38 @@ local function GetLocalTeam()
     return team
 end
 
-local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option)
+local function GetPlayerPawnIndexByUserID(user_id)
+    if user_id == nil or user_id < 0 then
+        return nil
+    end
+
+    -- UserID 对应玩家控制器；通过控制器的 pawn 句柄取得玩家实体索引。
+    local controller = entities.GetByIndex(user_id + 1)
+    if not controller then
+        return nil
+    end
+
+    local ok, class = pcall(function()
+        return controller:GetClass()
+    end)
+    if not ok or class ~= "CCSPlayerController" then
+        return nil
+    end
+
+    local ok_handle, pawn_handle = pcall(function()
+        return controller:GetFieldInt("m_hPlayerPawn")
+    end)
+    if not ok_handle or not pawn_handle or pawn_handle <= 0 then
+        return nil
+    end
+
+    return pawn_handle % 32768
+end
+
+local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option, reason)
     local current_team = GetLocalTeam()
     if current_team ~= 2 and current_team ~= 3 then
+        DebugPrint(string.format("%s切队取消：自身队伍无效(%s)", reason, tostring(current_team)))
         return false
     end
 
@@ -109,7 +144,10 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     if secondary_buy_command ~= "" then
         table.insert(buy_commands, secondary_buy_command)
     end
-    client.Command(table.concat(buy_commands, ";"))
+    local command = table.concat(buy_commands, ";")
+    DebugPrint(string.format("%s切队：当前队伍=%d，目标队伍=%d，命令=%s",
+        reason, current_team, next_team, command))
+    client.Command(command)
     LastTeamSwitchTime = cur_time
     return true
 end
@@ -138,6 +176,8 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
     gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
         SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
+        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、击杀、死亡及切队判断信息")
 
     gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
         SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
@@ -150,21 +190,27 @@ client.AllowListener("player_death")
 callbacks.Register("FireGameEvent", function(e)
     local event_name = e:GetName()
     local local_index = client.GetLocalPlayerIndex()
-    if not local_index or local_index <= 0 then
-        return
-    end
 
     if event_name == "weapon_fire" then
         local user_id = e:GetInt("userid")
-        if user_id > 0
-            and gui.GetValue("misc.advanced_spam_admode_switchteam")
-            and gui.GetValue("misc.advanced_spam_admode_fire_switchteam")
-            and user_id + 1 == local_index then
-            SwitchTeam(
-                globals.RealTime(),
-                gui.GetValue("misc.advanced_spam_admode_primaryweapon"),
-                gui.GetValue("misc.advanced_spam_admode_secondaryweapon")
-            )
+        local player_index = GetPlayerPawnIndexByUserID(user_id)
+        local is_local_fire = local_index and local_index > 0
+            and player_index ~= nil and player_index == local_index
+        DebugPrint(string.format("weapon_fire：UserID=%d，事件玩家实体索引=%s，本地玩家索引=%s，自身匹配=%s，武器=%s",
+            user_id, tostring(player_index), tostring(local_index), tostring(is_local_fire), e:GetString("weapon")))
+        if is_local_fire then
+            local switch_enabled = gui.GetValue("misc.advanced_spam_admode_switchteam")
+            local fire_switch_enabled = gui.GetValue("misc.advanced_spam_admode_fire_switchteam")
+            DebugPrint(string.format("自身开火处理：切换阵营=%s，开火切换=%s",
+                tostring(switch_enabled), tostring(fire_switch_enabled)))
+            if switch_enabled and fire_switch_enabled then
+                SwitchTeam(
+                    globals.RealTime(),
+                    gui.GetValue("misc.advanced_spam_admode_primaryweapon"),
+                    gui.GetValue("misc.advanced_spam_admode_secondaryweapon"),
+                    "开火"
+                )
+            end
         end
         return
     end
@@ -173,25 +219,41 @@ callbacks.Register("FireGameEvent", function(e)
         return
     end
 
+    local victim_user_id = e:GetInt("userid")
+    local attacker_user_id = e:GetInt("attacker")
+    local victim_index = GetPlayerPawnIndexByUserID(victim_user_id)
+    local attacker_index = GetPlayerPawnIndexByUserID(attacker_user_id)
+    local local_kill = local_index and local_index > 0
+        and attacker_index ~= nil
+        and attacker_index == local_index
+        and victim_user_id ~= attacker_user_id
+    local local_death = local_index and local_index > 0
+        and victim_index ~= nil and victim_index == local_index
+    DebugPrint(string.format("player_death：击杀者UserID=%d/玩家实体%s，受害者UserID=%d/玩家实体%s，本地玩家索引=%s，自身击杀=%s，自身死亡=%s，限速=%s",
+        attacker_user_id, tostring(attacker_index), victim_user_id, tostring(victim_index),
+        tostring(local_index), tostring(local_kill), tostring(local_death),
+        tostring(gui.GetValue("misc.advanced_spam_kill_throttle"))))
+
     if not gui.GetValue("misc.advanced_spam_kill_throttle") then
         return
     end
 
-    local victim_user_id = e:GetInt("userid")
-    local attacker_user_id = e:GetInt("attacker")
-    if attacker_user_id > 0 and attacker_user_id + 1 == local_index
-        and victim_user_id ~= attacker_user_id then
+    if local_kill then
         gui.SetValue("lbot.trg.enable", false)
         gui.SetValue("rbot.enable", false)
         KillThrottleWaiting = true
         DeathsSinceKill = 0
-    elseif KillThrottleWaiting and victim_user_id + 1 == local_index then
+        DebugPrint("击杀他人：已关闭 lbot.trg.enable 和 rbot.enable，死亡计数已重置")
+    elseif KillThrottleWaiting and local_death then
         DeathsSinceKill = DeathsSinceKill + 1
+        DebugPrint(string.format("自身死亡：死亡计数=%d/%d",
+            DeathsSinceKill, gui.GetValue("misc.advanced_spam_kill_throttle_deaths")))
         if DeathsSinceKill >= gui.GetValue("misc.advanced_spam_kill_throttle_deaths") then
             gui.SetValue("lbot.trg.enable", true)
             gui.SetValue("rbot.enable", true)
             KillThrottleWaiting = false
             DeathsSinceKill = 0
+            DebugPrint("死亡次数达到设定值：已恢复 lbot.trg.enable 和 rbot.enable")
         end
     end
 end)
@@ -211,10 +273,10 @@ callbacks.Register("Draw", function()
     msg = gui.GetValue("misc.advanced_spam_msg")
     kill_throttle = gui.GetValue("misc.advanced_spam_kill_throttle")
 
-    switch_delay_control:SetActive(admode)
-    fire_switch_control:SetActive(admode)
-    primary_weapon_control:SetActive(admode)
-    secondary_weapon_control:SetActive(admode)
+    switch_delay_control:SetInvisible(not admode)
+    fire_switch_control:SetInvisible(not admode)
+    primary_weapon_control:SetInvisible(not admode)
+    secondary_weapon_control:SetInvisible(not admode)
 
     if scoreboard_enable ~= LastScoreboardEnable then
         client.Command(scoreboard_enable and "+showscores" or "-showscores")
@@ -222,6 +284,7 @@ callbacks.Register("Draw", function()
     end
 
     if not kill_throttle and KillThrottleWaiting then
+        DebugPrint("击杀限速已关闭：恢复两种开火并清除等待状态")
         gui.SetValue("lbot.trg.enable", true)
         gui.SetValue("rbot.enable", true)
         KillThrottleWaiting = false
@@ -241,7 +304,7 @@ callbacks.Register("Draw", function()
     end
 
     if admode and cur_time - LastTeamSwitchTime >= team_delay then
-        SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option)
+        SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option, "定时")
     end
 
     if enable and not LastSpamEnable and msg ~= "" then
