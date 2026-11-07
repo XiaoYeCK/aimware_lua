@@ -224,13 +224,27 @@ callbacks.Register("FireGameEvent", function(e)
 
     if event_name == "player_hurt" then
         local victim_user_id = e:GetInt("userid")
+        local attacker_user_id = e:GetInt("attacker")
         local victim_index = GetPlayerPawnIndexByUserID(victim_user_id)
+        local attacker_index = GetPlayerPawnIndexByUserID(attacker_user_id)
         local is_local_hurt = local_index and local_index > 0
             and victim_index ~= nil and victim_index == local_index
         local damage = e:GetInt("dmg_health")
-        DebugPrint(string.format("player_hurt：受害者UserID=%d，玩家实体索引=%s，本地玩家索引=%s，自身受伤=%s，伤害=%d",
-            victim_user_id, tostring(victim_index), tostring(local_index), tostring(is_local_hurt), damage))
-        if is_local_hurt and damage > 0 then
+        local weapon = string.lower(e:GetString("weapon") or "")
+        local environmental_damage = weapon == "world"
+            or weapon == "worldspawn"
+            or weapon == "fall"
+            or weapon == "trigger_hurt"
+            or attacker_user_id == 65535
+            or attacker_index == nil
+        local self_damage = attacker_user_id == victim_user_id
+            or (attacker_index ~= nil and attacker_index == victim_index)
+        local excluded_damage = self_damage or environmental_damage
+        DebugPrint(string.format("player_hurt：攻击者UserID=%d/玩家实体%s，受害者UserID=%d/玩家实体%s，本地玩家索引=%s，自身受伤=%s，武器=%s，伤害=%d，自身伤害=%s，环境伤害=%s",
+            attacker_user_id, tostring(attacker_index), victim_user_id, tostring(victim_index),
+            tostring(local_index), tostring(is_local_hurt), weapon, damage,
+            tostring(self_damage), tostring(environmental_damage)))
+        if is_local_hurt and damage > 0 and not excluded_damage then
             local switch_enabled = gui.GetValue("misc.advanced_spam_admode_switchteam")
             local hurt_switch_enabled = gui.GetValue("misc.advanced_spam_admode_hurt_switchteam")
             DebugPrint(string.format("自身受伤处理：切换阵营=%s，受伤切换=%s",
