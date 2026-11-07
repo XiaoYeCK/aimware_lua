@@ -154,6 +154,10 @@ end
 
 gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ---------------------------")
 
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
+        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
+    RF("杂项", "功能", "调试打印"):SetInvisible(true)
+
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
         SD(RF("杂项", "功能", "开关"), "启用刷屏")
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_onlyteam", "仅队内", false)
@@ -161,6 +165,14 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
     gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
         SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
     gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
+        SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
+        SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
+    gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
+        SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_switchteam", "切换阵营", false)
         SD(RF("杂项", "功能", "切换阵营"), "自动切换阵营")
@@ -174,18 +186,6 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
         SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
     local secondary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
         SD(RF("杂项", "功能", "自动购买-副武器"), "切换阵营时购买副武器；轮询仅在副武器中循环")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
-        SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
-        SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
-        SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
-        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
-    RF("杂项", "功能", "调试打印"):SetInvisible(true)
 
 gui.Text(RF("杂项", "功能"), "---------------------------------------------------------------")
 
