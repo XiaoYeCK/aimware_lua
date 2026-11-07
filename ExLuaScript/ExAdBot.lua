@@ -165,6 +165,8 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
         SD(RF("杂项", "功能", "切换间隔"), "单位: 秒")
     local fire_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_fire_switchteam", "开火切换阵营", false)
         SD(RF("杂项", "功能", "开火切换阵营"), "开火时立即切换阵营，并刷新定时切换倒计时")
+    local hurt_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_hurt_switchteam", "受伤切换阵营", false)
+        SD(RF("杂项", "功能", "受伤切换阵营"), "自身受到伤害时立即切换阵营，并刷新定时切换倒计时")
     local primary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_primaryweapon", "自动购买-主武器", "禁用", "轮询", "大狙", "连狙", "鸟狙")
         SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
     local secondary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
@@ -177,7 +179,7 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
     gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
         SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
-        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、击杀、死亡及切队判断信息")
+        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
 
     gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
         SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
@@ -185,6 +187,7 @@ gui.Text(RF("杂项", "功能"), "----------------------------- 刷屏 ---------
 
 LastScoreboardEnable = gui.GetValue("misc.advanced_spam_admode_showscores")
 client.AllowListener("weapon_fire")
+client.AllowListener("player_hurt")
 client.AllowListener("player_death")
 
 callbacks.Register("FireGameEvent", function(e)
@@ -209,6 +212,31 @@ callbacks.Register("FireGameEvent", function(e)
                     gui.GetValue("misc.advanced_spam_admode_primaryweapon"),
                     gui.GetValue("misc.advanced_spam_admode_secondaryweapon"),
                     "开火"
+                )
+            end
+        end
+        return
+    end
+
+    if event_name == "player_hurt" then
+        local victim_user_id = e:GetInt("userid")
+        local victim_index = GetPlayerPawnIndexByUserID(victim_user_id)
+        local is_local_hurt = local_index and local_index > 0
+            and victim_index ~= nil and victim_index == local_index
+        local damage = e:GetInt("dmg_health")
+        DebugPrint(string.format("player_hurt：受害者UserID=%d，玩家实体索引=%s，本地玩家索引=%s，自身受伤=%s，伤害=%d",
+            victim_user_id, tostring(victim_index), tostring(local_index), tostring(is_local_hurt), damage))
+        if is_local_hurt and damage > 0 then
+            local switch_enabled = gui.GetValue("misc.advanced_spam_admode_switchteam")
+            local hurt_switch_enabled = gui.GetValue("misc.advanced_spam_admode_hurt_switchteam")
+            DebugPrint(string.format("自身受伤处理：切换阵营=%s，受伤切换=%s",
+                tostring(switch_enabled), tostring(hurt_switch_enabled)))
+            if switch_enabled and hurt_switch_enabled then
+                SwitchTeam(
+                    globals.RealTime(),
+                    gui.GetValue("misc.advanced_spam_admode_primaryweapon"),
+                    gui.GetValue("misc.advanced_spam_admode_secondaryweapon"),
+                    "受伤"
                 )
             end
         end
@@ -275,6 +303,7 @@ callbacks.Register("Draw", function()
 
     switch_delay_control:SetInvisible(not admode)
     fire_switch_control:SetInvisible(not admode)
+    hurt_switch_control:SetInvisible(not admode)
     primary_weapon_control:SetInvisible(not admode)
     secondary_weapon_control:SetInvisible(not admode)
 
