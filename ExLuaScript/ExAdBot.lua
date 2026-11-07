@@ -1,5 +1,7 @@
 RF = gui.Reference
 
+local DebugMode = false
+
 LastSendTime = 0
 LastTeamSwitchTime = 0
 CurrentPrimaryBuybotOption = 2
@@ -10,7 +12,7 @@ local KillThrottleWaiting = false
 local DeathsSinceKill = 0
 
 local function DebugPrint(message)
-    if gui.GetValue("misc.advanced_spam_debug") then
+    if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
         print("[ExAdBot调试] " .. message)
     end
 end
@@ -44,6 +46,43 @@ function CheckTranslated()
     end
     return CheckChildren(RF())
 end
+
+gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ---------------------------")
+
+    local debug_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
+        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
+    debug_control:SetInvisible(not DebugMode)
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
+        SD(RF("杂项", "功能", "开关"), "启用刷屏")
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_onlyteam", "仅队内", false)
+        SD(RF("杂项", "功能", "仅队内"), "仅队内刷屏")
+    gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
+        SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
+    gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
+        SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
+        SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
+    gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
+        SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_switchteam", "切换阵营", false)
+        SD(RF("杂项", "功能", "切换阵营"), "自动切换阵营")
+    local switch_delay_control = gui.Slider(RF("杂项", "功能"), "advanced_spam_admode_switchdelay", "切换间隔", 1.5, 0.1, 30.0, 0.5)
+        SD(RF("杂项", "功能", "切换间隔"), "单位: 秒")
+    local fire_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_fire_switchteam", "开火切换阵营", false)
+        SD(RF("杂项", "功能", "开火切换阵营"), "开火时立即切换阵营，并刷新定时切换倒计时")
+    local hurt_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_hurt_switchteam", "受伤切换阵营", false)
+        SD(RF("杂项", "功能", "受伤切换阵营"), "自身受到伤害时立即切换阵营，并刷新定时切换倒计时")
+    local primary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_primaryweapon", "自动购买-主武器", "禁用", "轮询", "大狙", "连狙", "鸟狙")
+        SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
+    local secondary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
+        SD(RF("杂项", "功能", "自动购买-副武器"), "切换阵营时购买副武器；轮询仅在副武器中循环")
+
+gui.Text(RF("杂项", "功能"), "---------------------------------------------------------------")
 
 function SendMsg(team_only, msg)
     if team_only then
@@ -151,43 +190,6 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     LastTeamSwitchTime = cur_time
     return true
 end
-
-gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ---------------------------")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
-        SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
-    RF("杂项", "功能", "调试打印"):SetInvisible(true)
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
-        SD(RF("杂项", "功能", "开关"), "启用刷屏")
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_onlyteam", "仅队内", false)
-        SD(RF("杂项", "功能", "仅队内"), "仅队内刷屏")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
-        SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
-    gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
-        SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
-        SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
-        SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
-
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_switchteam", "切换阵营", false)
-        SD(RF("杂项", "功能", "切换阵营"), "自动切换阵营")
-    local switch_delay_control = gui.Slider(RF("杂项", "功能"), "advanced_spam_admode_switchdelay", "切换间隔", 1.5, 0.1, 30.0, 0.5)
-        SD(RF("杂项", "功能", "切换间隔"), "单位: 秒")
-    local fire_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_fire_switchteam", "开火切换阵营", false)
-        SD(RF("杂项", "功能", "开火切换阵营"), "开火时立即切换阵营，并刷新定时切换倒计时")
-    local hurt_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_hurt_switchteam", "受伤切换阵营", false)
-        SD(RF("杂项", "功能", "受伤切换阵营"), "自身受到伤害时立即切换阵营，并刷新定时切换倒计时")
-    local primary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_primaryweapon", "自动购买-主武器", "禁用", "轮询", "大狙", "连狙", "鸟狙")
-        SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
-    local secondary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
-        SD(RF("杂项", "功能", "自动购买-副武器"), "切换阵营时购买副武器；轮询仅在副武器中循环")
-
-gui.Text(RF("杂项", "功能"), "---------------------------------------------------------------")
 
 LastScoreboardEnable = gui.GetValue("misc.advanced_spam_admode_showscores")
 client.AllowListener("weapon_fire")
@@ -324,6 +326,7 @@ callbacks.Register("Draw", function()
     hurt_switch_control:SetInvisible(not admode)
     primary_weapon_control:SetInvisible(not admode)
     secondary_weapon_control:SetInvisible(not admode)
+    debug_control:SetInvisible(not DebugMode)
 
     if scoreboard_enable ~= LastScoreboardEnable then
         client.Command(scoreboard_enable and "+showscores" or "-showscores")
