@@ -11,8 +11,6 @@ local LastScoreboardEnable = false
 local KillThrottleWaiting = false
 local DeathsSinceKill = 0
 local LastAutoMatchCheckTime = 0
-local AutoMatchRequested = false
-local WasInGame = false
 
 local function DebugPrint(message)
     if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
@@ -214,7 +212,6 @@ callbacks.Register("FireGameEvent", function(e)
     if event_name == "cs_win_panel_match" then
         if gui.GetValue("misc.advanced_spam_autodisconnect") then
             client.Command("disconnect")
-            AutoMatchRequested = false
         end
         return
     end
@@ -373,10 +370,6 @@ callbacks.Register("Draw", function()
         LastTeamSwitchTime = cur_time
     end
 
-    if not gui.GetValue("misc.advanced_spam_automatch") then
-        AutoMatchRequested = false
-    end
-
     if cur_time < LastAutoMatchCheckTime then
         LastAutoMatchCheckTime = cur_time
     end
@@ -386,20 +379,15 @@ callbacks.Register("Draw", function()
         local local_index = client.GetLocalPlayerIndex()
         local is_in_game = local_index and local_index > 0
 
-        if is_in_game then
-            AutoMatchRequested = false
-            WasInGame = true
-        elseif WasInGame then
-            AutoMatchRequested = false
-            WasInGame = false
-        end
-
-        if gui.GetValue("misc.advanced_spam_automatch")
-            and not is_in_game and not AutoMatchRequested then
+        if gui.GetValue("misc.advanced_spam_automatch") and not is_in_game then
             panorama.RunScript([[
+                $.DispatchEvent("Activated",
+                    $.GetContextPanel().FindChildTraverse("MainMenuNavBarPlay"),
+                    "mouse"
+                );
+
                 LobbyAPI.StartMatchmaking("", "", "", "");
             ]])
-            AutoMatchRequested = true
         end
     end
 

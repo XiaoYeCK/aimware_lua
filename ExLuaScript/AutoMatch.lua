@@ -1,7 +1,12 @@
 function StartMatchmaking()
     panorama.RunScript([[
-            LobbyAPI.StartMatchmaking("", "", "", "");
-    ]])
+                $.DispatchEvent("Activated",
+                    $.GetContextPanel().FindChildTraverse("MainMenuNavBarPlay"),
+                    "mouse"
+                );
+
+                LobbyAPI.StartMatchmaking("", "", "", "");
+            ]])
 end
 
 StartMatchmaking()
