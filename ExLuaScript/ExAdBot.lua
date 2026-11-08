@@ -13,7 +13,7 @@ local DeathsSinceKill = 0
 
 local function DebugPrint(message)
     if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
-        print("[ExAdBot调试] " .. message)
+        print("[ExAdBot DEBUG] " .. message)
         gui.SetValue("misc.log.console", true)
     end
 end
@@ -62,8 +62,11 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
         SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
     gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_showscores", "显示计分板", false)
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_showscores", "显示计分板", false)
         SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_match", "自动匹配", false)
+        SD(RF("杂项", "功能", "自动匹配"), "回到大厅自动匹配")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
@@ -192,7 +195,7 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     return true
 end
 
-LastScoreboardEnable = gui.GetValue("misc.advanced_spam_admode_showscores")
+LastScoreboardEnable = gui.GetValue("misc.advanced_spam_showscores")
 client.AllowListener("weapon_fire")
 client.AllowListener("player_hurt")
 client.AllowListener("player_death")
@@ -319,7 +322,7 @@ callbacks.Register("Draw", function()
     team_delay = gui.GetValue("misc.advanced_spam_admode_switchdelay")
     primary_weapon_option = gui.GetValue("misc.advanced_spam_admode_primaryweapon")
     secondary_weapon_option = gui.GetValue("misc.advanced_spam_admode_secondaryweapon")
-    scoreboard_enable = gui.GetValue("misc.advanced_spam_admode_showscores")
+    scoreboard_enable = gui.GetValue("misc.advanced_spam_showscores")
     send_speed = gui.GetValue("misc.advanced_spam_speed")
     msg = gui.GetValue("misc.advanced_spam_msg")
     kill_throttle = gui.GetValue("misc.advanced_spam_kill_throttle")
