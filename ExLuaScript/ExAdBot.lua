@@ -14,6 +14,7 @@ local DeathsSinceKill = 0
 local function DebugPrint(message)
     if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
         print("[ExAdBot调试] " .. message)
+        gui.SetValue("misc.log.console", true)
     end
 end
 
@@ -289,6 +290,7 @@ callbacks.Register("FireGameEvent", function(e)
     if local_kill then
         gui.SetValue("lbot.trg.enable", false)
         gui.SetValue("rbot.enable", false)
+        gui.SetValue("lbot.aim.autoaun", false)
         KillThrottleWaiting = true
         DeathsSinceKill = 0
         DebugPrint("击杀他人：已关闭 lbot.trg.enable 和 rbot.enable，死亡计数已重置")
@@ -299,6 +301,7 @@ callbacks.Register("FireGameEvent", function(e)
         if DeathsSinceKill >= gui.GetValue("misc.advanced_spam_kill_throttle_deaths") then
             gui.SetValue("lbot.trg.enable", true)
             gui.SetValue("rbot.enable", true)
+            gui.SetValue("lbot.aim.autoaun", true)
             KillThrottleWaiting = false
             DeathsSinceKill = 0
             DebugPrint("死亡次数达到设定值：已恢复 lbot.trg.enable 和 rbot.enable")
@@ -337,14 +340,13 @@ callbacks.Register("Draw", function()
         DebugPrint("击杀限速已关闭：恢复两种开火并清除等待状态")
         gui.SetValue("lbot.trg.enable", true)
         gui.SetValue("rbot.enable", true)
+        gui.SetValue("lbot.aim.autoaun", true)
         KillThrottleWaiting = false
         DeathsSinceKill = 0
     end
 
     if gui.GetValue("misc.chatspam") then
         RF("杂项", "功能", "广告"):SetValue(false)
-        gui.SetValue("misc.master", true)
-        gui.SetValue("misc.log.console", true)
     end
 
     -- globals.RealTime() 返回的是游戏会话时间, 退出对局后时间会重置为0, 但 LastSendTime 仍保留着上一局的值, 导致 CurrentTime - LastSendTime 为负数
