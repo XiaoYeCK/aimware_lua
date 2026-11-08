@@ -65,8 +65,12 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_showscores", "显示计分板", false)
         SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_match", "自动匹配", false)
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_automatch", "自动匹配", false)
         SD(RF("杂项", "功能", "自动匹配"), "回到大厅自动匹配")
+
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_autodisconnect", "自动退出", false)
+        SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅")
+        -- client.AllowListener("cs_win_panel_match") 注册监听比赛结束事件
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
