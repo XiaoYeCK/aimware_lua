@@ -10,6 +10,9 @@ LastSpamEnable = false
 local LastScoreboardEnable = false
 local KillThrottleWaiting = false
 local DeathsSinceKill = 0
+local LastAutoMatchCheckTime = 0
+local AutoMatchRequested = false
+local WasInGame = false
 
 local function DebugPrint(message)
     if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
@@ -66,11 +69,10 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
         SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_automatch", "自动匹配", false)
-        SD(RF("杂项", "功能", "自动匹配"), "回到大厅自动匹配")
+        SD(RF("杂项", "功能", "自动匹配"), "回到大厅后每秒检测一次并自动匹配")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_autodisconnect", "自动退出", false)
         SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅")
-        -- client.AllowListener("cs_win_panel_match") 注册监听比赛结束事件
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
@@ -203,10 +205,19 @@ LastScoreboardEnable = gui.GetValue("misc.advanced_spam_showscores")
 client.AllowListener("weapon_fire")
 client.AllowListener("player_hurt")
 client.AllowListener("player_death")
+client.AllowListener("cs_win_panel_match")
 
 callbacks.Register("FireGameEvent", function(e)
     local event_name = e:GetName()
     local local_index = client.GetLocalPlayerIndex()
+
+    if event_name == "cs_win_panel_match" then
+        if gui.GetValue("misc.advanced_spam_autodisconnect") then
+            client.Command("disconnect")
+            AutoMatchRequested = false
+        end
+        return
+    end
 
     if event_name == "weapon_fire" then
         local user_id = e:GetInt("userid")
@@ -360,6 +371,36 @@ callbacks.Register("Draw", function()
     if cur_time < LastSendTime or cur_time < LastTeamSwitchTime then
         LastSendTime = cur_time
         LastTeamSwitchTime = cur_time
+    end
+
+    if not gui.GetValue("misc.advanced_spam_automatch") then
+        AutoMatchRequested = false
+    end
+
+    if cur_time < LastAutoMatchCheckTime then
+        LastAutoMatchCheckTime = cur_time
+    end
+
+    if cur_time - LastAutoMatchCheckTime >= 1 then
+        LastAutoMatchCheckTime = cur_time
+        local local_index = client.GetLocalPlayerIndex()
+        local is_in_game = local_index and local_index > 0
+
+        if is_in_game then
+            AutoMatchRequested = false
+            WasInGame = true
+        elseif WasInGame then
+            AutoMatchRequested = false
+            WasInGame = false
+        end
+
+        if gui.GetValue("misc.advanced_spam_automatch")
+            and not is_in_game and not AutoMatchRequested then
+            panorama.RunScript([[
+                LobbyAPI.StartMatchmaking("", "", "", "");
+            ]])
+            AutoMatchRequested = true
+        end
     end
 
     if admode and cur_time - LastTeamSwitchTime >= team_delay then
