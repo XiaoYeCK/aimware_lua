@@ -1,7 +1,11 @@
 RF = gui.Reference
 
 local DebugMode = false
-
+--[[
+    TODO: 
+        1.击杀限速开启前提下，自己disconnect后，lbot.trg.enable，rbot.enable和lbot.aim.autoaun不会恢复为true
+        2.lbot.trg.enable，rbot.enable和lbot.aim.autoaun关闭的情况下，开启击杀限速，死亡次数达标也不会恢复为true
+]]
 LastSendTime = 0
 LastTeamSwitchTime = 0
 CurrentPrimaryBuybotOption = 2
