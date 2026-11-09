@@ -18,6 +18,11 @@ local DeathsSinceKill = 0
 local LastKillThrottleEnable = false
 local KillThrottleWasInGame = false
 local LastAutoMatchCheckTime = 0
+local AutoMatchStarted = false
+local AutoMatchDelayUntil = nil
+local DisconnectIssued = false
+local WasInGame = nil
+local BotDisconnectPendingUntil = nil
 
 local function DebugPrint(message)
     if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
@@ -88,13 +93,17 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
         SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_automatch", "自动匹配", false)
-        SD(RF("杂项", "功能", "自动匹配"), "回到大厅后每秒检测一次并自动匹配")
+        SD(RF("杂项", "功能", "自动匹配"), "在大厅启用时立即匹配；从对局回到大厅后按匹配延迟设置触发")
+    gui.Slider(RF("杂项", "功能"), "advanced_spam_automatch_delay", "匹配延迟", 10, 1, 10, 1)
+        SD(RF("杂项", "功能", "匹配延迟"), "从对局回到大厅后等待时间；单位: 秒")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_autodisconnect", "自动退出", false)
-        SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅")
+        SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅；自动匹配将在回到大厅后按匹配延迟设置触发")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_botdisconnect", "出现Bot退出", false)
-        SD(RF("杂项", "功能", "出现Bot退出"), "每秒检查玩家控制器；检测到m_steamID为0时退出当前对局")
+        SD(RF("杂项", "功能", "出现Bot退出"), "检测到Bot后等待设定时长再退出；期间Bot消失或关闭此选项则取消")
+    gui.Slider(RF("杂项", "功能"), "advanced_spam_botdisconnect_delay", "Bot退出等待时长", 1, 1, 10, 1)
+        SD(RF("杂项", "功能", "Bot退出等待时长"), "检测到Bot后等待时间；单位: 秒")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
@@ -201,6 +210,28 @@ local function HasBotPlayer()
     return false
 end
 
+local function RequestDisconnect(reason)
+    if DisconnectIssued then
+        return
+    end
+
+    DebugPrint(reason)
+    DisconnectIssued = true
+    client.Command("disconnect")
+end
+
+local function StartAutoMatchmaking()
+    panorama.RunScript([[
+        $.DispatchEvent("Activated",
+            $.GetContextPanel().FindChildTraverse("MainMenuNavBarPlay"),
+            "mouse"
+        );
+
+        LobbyAPI.StartMatchmaking("", "", "", "");
+    ]])
+    AutoMatchStarted = true
+end
+
 local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option, reason)
     local current_team = GetLocalTeam()
     if current_team ~= 2 and current_team ~= 3 then
@@ -255,7 +286,7 @@ callbacks.Register("FireGameEvent", function(e)
 
     if event_name == "cs_win_panel_match" then
         if gui.GetValue("misc.advanced_spam_autodisconnect") then
-            client.Command("disconnect")
+            RequestDisconnect("比赛结束：退出当前对局")
         end
         return
     end
@@ -433,26 +464,48 @@ callbacks.Register("Draw", function()
         LastAutoMatchCheckTime = cur_time
     end
 
-    if cur_time - LastAutoMatchCheckTime >= 1 then
+    local local_index = client.GetLocalPlayerIndex()
+    local is_in_game = local_index ~= nil and local_index > 0
+    if WasInGame == true and not is_in_game then
+        local auto_match_delay = gui.GetValue("misc.advanced_spam_automatch_delay")
+        AutoMatchDelayUntil = cur_time + auto_match_delay
+        DebugPrint(string.format("检测到从对局返回大厅：自动匹配将在%d秒后触发", auto_match_delay))
+    end
+    WasInGame = is_in_game
+
+    local bot_disconnect_enabled = gui.GetValue("misc.advanced_spam_botdisconnect")
+    if BotDisconnectPendingUntil then
+        if not bot_disconnect_enabled or not is_in_game or not HasBotPlayer() then
+            BotDisconnectPendingUntil = nil
+            DebugPrint("Bot退出已取消：Bot消失、离开对局或关闭了退出选项")
+        elseif cur_time >= BotDisconnectPendingUntil then
+            BotDisconnectPendingUntil = nil
+            RequestDisconnect("检测到Bot持续存在设定时长：退出当前对局")
+        end
+    elseif cur_time - LastAutoMatchCheckTime >= 1 then
         LastAutoMatchCheckTime = cur_time
-        local local_index = client.GetLocalPlayerIndex()
-        local is_in_game = local_index and local_index > 0
-
-        if gui.GetValue("misc.advanced_spam_botdisconnect") and is_in_game and HasBotPlayer() then
-            DebugPrint("检测到Bot：退出当前对局")
-            client.Command("disconnect")
+        if bot_disconnect_enabled and is_in_game and HasBotPlayer() and not DisconnectIssued then
+            local bot_disconnect_delay = gui.GetValue("misc.advanced_spam_botdisconnect_delay")
+            BotDisconnectPendingUntil = cur_time + bot_disconnect_delay
+            DebugPrint(string.format("检测到Bot：开始%d秒确认倒计时", bot_disconnect_delay))
         end
+    end
 
-        if gui.GetValue("misc.advanced_spam_automatch") and not is_in_game then
-            panorama.RunScript([[
-                $.DispatchEvent("Activated",
-                    $.GetContextPanel().FindChildTraverse("MainMenuNavBarPlay"),
-                    "mouse"
-                );
+    local auto_match_enabled = gui.GetValue("misc.advanced_spam_automatch")
 
-                LobbyAPI.StartMatchmaking("", "", "", "");
-            ]])
-        end
+    if is_in_game then
+        AutoMatchStarted = false
+    elseif DisconnectIssued then
+        DisconnectIssued = false
+    end
+
+    if not auto_match_enabled then
+        AutoMatchStarted = false
+    elseif not is_in_game and not AutoMatchStarted
+        and (AutoMatchDelayUntil == nil or cur_time >= AutoMatchDelayUntil) then
+        StartAutoMatchmaking()
+        AutoMatchDelayUntil = nil
+        DebugPrint("已在大厅触发自动匹配")
     end
 
     if admode and cur_time - LastTeamSwitchTime >= team_delay then
