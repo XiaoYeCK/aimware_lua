@@ -461,8 +461,8 @@ callbacks.Register("Draw", function()
     LastKillThrottleEnable = kill_throttle
 
     if gui.GetValue("misc.chatspam") then
-        RF("杂项", "功能", "ExAdBot", "广告"):SetValue(false)
-        RF("杂项", "功能", "ExAdBot", "广告"):SetDisabled(true)
+        RF("杂项", "功能", "广告"):SetValue(false)
+        RF("杂项", "功能", "广告"):SetDisabled(true)
     end
 
     -- globals.RealTime() 返回的是游戏会话时间, 退出对局后时间会重置为0, 但 LastSendTime 仍保留着上一局的值, 导致 CurrentTime - LastSendTime 为负数
