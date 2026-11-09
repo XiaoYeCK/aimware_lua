@@ -1,18 +1,20 @@
--- AimWare V6 CS2 汉化
+--[[
+AimWare V6 CS2 汉化
 
--- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
--- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
--- 本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
+旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
+人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
+本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
 
--- 本项目基于 GNU Affero General Public License v3.0 (AGPL‑v3.0) 开源
--- 您可以自由地使用、修改、分发源代码，但必须遵守 AGPL‑v3.0 协议的条款
+本项目基于 GNU Affero General Public License v3.0 (AGPL‑v3.0) 开源
+您可以自由地使用、修改、分发源代码，但必须遵守 AGPL‑v3.0 协议的条款
 
--- https://aimware.net/forum/thread/179941
--- https://github.com/XiaoYeCK/aimware_lua
+https://aimware.net/forum/thread/179941
+https://github.com/XiaoYeCK/aimware_lua
+]]
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-10-30 (UTC+8) test-1"
+UpdateInfo = "2026-11-9 (UTC+8) test-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -50,8 +52,10 @@ if ScriptName ~= TargetName then
     file.Delete(ScriptName)
     NewPrint("脚本已重命名为:" .. Space .. TargetName .. Space .. "(使用感叹号是为了优先加载)")
     NewPrint("请刷新脚本列表后手动重载")
-    -- 已加载脚本文件名和改动后不一致无法自行重载，若一致则可以
-    -- 后续可以识别是否是TargetName，如果原名称和TargetName一致直接重载，不一致才提示刷新列表手动重载
+    --[[
+        已加载脚本文件名和改动后不一致无法自行重载，若一致则可以
+        后续可以识别是否是TargetName，如果原名称和TargetName一致直接重载，不一致才提示刷新列表手动重载
+    ]]
 end
 
 --<->
