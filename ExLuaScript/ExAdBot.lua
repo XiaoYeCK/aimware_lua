@@ -79,7 +79,7 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
 
     local debug_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
         SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
-    debug_control:SetInvisible(not DebugMode)
+    debug_control:SetDisabled(not DebugMode)
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
         SD(RF("杂项", "功能", "开关"), "启用刷屏")
@@ -101,7 +101,7 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
         SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅；自动匹配将在回到大厅后按匹配延迟设置触发")
 
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_botdisconnect", "出现Bot退出", false)
-        SD(RF("杂项", "功能", "出现Bot退出"), "检测到Bot后等待设定时长再退出；期间Bot消失或关闭此选项则取消")
+        SD(RF("杂项", "功能", "出现Bot退出"), "对局内检测到Bot后等待设定时长；到时仍在对局且有Bot、此选项开启时退出")
     gui.Slider(RF("杂项", "功能"), "advanced_spam_botdisconnect_delay", "Bot退出等待时长", 1, 1, 10, 1)
         SD(RF("杂项", "功能", "Bot退出等待时长"), "检测到Bot后等待时间；单位: 秒")
 
@@ -410,12 +410,12 @@ callbacks.Register("Draw", function()
     msg = gui.GetValue("misc.advanced_spam_msg")
     kill_throttle = gui.GetValue("misc.advanced_spam_kill_throttle")
 
-    switch_delay_control:SetInvisible(not admode)
-    fire_switch_control:SetInvisible(not admode)
-    hurt_switch_control:SetInvisible(not admode)
-    primary_weapon_control:SetInvisible(not admode)
-    secondary_weapon_control:SetInvisible(not admode)
-    debug_control:SetInvisible(not DebugMode)
+    switch_delay_control:SetDisabled(not admode)
+    fire_switch_control:SetDisabled(not admode)
+    hurt_switch_control:SetDisabled(not admode)
+    primary_weapon_control:SetDisabled(not admode)
+    secondary_weapon_control:SetDisabled(not admode)
+    debug_control:SetDisabled(not DebugMode)
 
     if scoreboard_enable ~= LastScoreboardEnable then
         client.Command(scoreboard_enable and "+showscores" or "-showscores")
@@ -452,6 +452,7 @@ callbacks.Register("Draw", function()
 
     if gui.GetValue("misc.chatspam") then
         RF("杂项", "功能", "广告"):SetValue(false)
+        RF("杂项", "功能", "广告"):SetDisabled(true)
     end
 
     -- globals.RealTime() 返回的是游戏会话时间, 退出对局后时间会重置为0, 但 LastSendTime 仍保留着上一局的值, 导致 CurrentTime - LastSendTime 为负数
@@ -472,19 +473,23 @@ callbacks.Register("Draw", function()
         DebugPrint(string.format("检测到从对局返回大厅：自动匹配将在%d秒后触发", auto_match_delay))
     end
     WasInGame = is_in_game
+    --------------------------
 
     local bot_disconnect_enabled = gui.GetValue("misc.advanced_spam_botdisconnect")
     if BotDisconnectPendingUntil then
-        if not bot_disconnect_enabled or not is_in_game or not HasBotPlayer() then
+        if cur_time >= BotDisconnectPendingUntil then
             BotDisconnectPendingUntil = nil
-            DebugPrint("Bot退出已取消：Bot消失、离开对局或关闭了退出选项")
-        elseif cur_time >= BotDisconnectPendingUntil then
-            BotDisconnectPendingUntil = nil
-            RequestDisconnect("检测到Bot持续存在设定时长：退出当前对局")
+            LastAutoMatchCheckTime = cur_time
+            local bot_still_present = is_in_game and HasBotPlayer()
+            if bot_disconnect_enabled and bot_still_present then
+                RequestDisconnect("Bot退出倒计时结束：对局内仍有Bot，退出当前对局")
+            else
+                DebugPrint("Bot退出已取消：倒计时结束时选项未开启、已离开对局或Bot已消失")
+            end
         end
     elseif cur_time - LastAutoMatchCheckTime >= 1 then
         LastAutoMatchCheckTime = cur_time
-        if bot_disconnect_enabled and is_in_game and HasBotPlayer() and not DisconnectIssued then
+        if bot_disconnect_enabled and is_in_game and not DisconnectIssued and HasBotPlayer() then
             local bot_disconnect_delay = gui.GetValue("misc.advanced_spam_botdisconnect_delay")
             BotDisconnectPendingUntil = cur_time + bot_disconnect_delay
             DebugPrint(string.format("检测到Bot：开始%d秒确认倒计时", bot_disconnect_delay))
