@@ -4,9 +4,10 @@
     2. 自动匹配指定模式，地图/地图组
 ]]
 
+local DebugMode = false
+
 RF = gui.Reference
 
-local DebugMode = false
 LastSendTime = 0
 LastTeamSwitchTime = 0
 CurrentPrimaryBuybotOption = 2
@@ -25,24 +26,10 @@ local WasInGame = nil
 local BotDisconnectPendingUntil = nil
 
 local function DebugPrint(message)
-    if DebugMode and gui.GetValue("misc.advanced_spam_debug") then
+    if DebugMode and gui.GetValue("misc.exadbot_debug") then
         print("[ExAdBot DEBUG] " .. message)
         gui.SetValue("misc.log.console", true)
     end
-end
-
-local function RestoreKillThrottleState()
-    if not KillThrottleWaiting then
-        return
-    end
-
-    gui.SetValue("lbot.trg.enable", true)
-    gui.SetValue("rbot.enable", true)
-    gui.SetValue("lbot.aim.autoaun", true)
-    KillThrottleWaiting = false
-    DeathsSinceKill = 0
-    KillThrottleWasInGame = false
-    DebugPrint("击杀限速恢复：已恢复 lbot.trg.enable、rbot.enable、lbot.aim.autoaun")
 end
 
 function SD(RF, Description)
@@ -75,58 +62,69 @@ function CheckTranslated()
     return CheckChildren(RF())
 end
 
-gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ---------------------------")
-
-    local debug_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_debug", "调试打印", false)
+    local debug_control = gui.Checkbox(RF("杂项", "功能"), "exadbot_debug", "调试打印", false)
         SD(RF("杂项", "功能", "调试打印"), "打印本地开火、受伤、击杀、死亡及切队判断信息")
-    debug_control:SetDisabled(not DebugMode)
+    debug_control:SetInvisible(not DebugMode)
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_enable", "开关", false)
-        SD(RF("杂项", "功能", "开关"), "启用刷屏")
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_onlyteam", "仅队内", false)
-        SD(RF("杂项", "功能", "仅队内"), "仅队内刷屏")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
-        SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
-    gui.Editbox(RF("杂项", "功能"), "advanced_spam_msg", "内容")
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_spam_enable", "定时发送", false)
+        SD(RF("杂项", "功能", "定时发送"), "启用定时发送消息")
+            local spam_onlyteam_control = gui.Checkbox(RF("杂项", "功能"), "exadbot_spam_onlyteam", "队内发送", false)
+                SD(RF("杂项", "功能", "队内发送"), "仅队内发送消息")
+            local spam_speed_control = gui.Slider(RF("杂项", "功能"), "exadbot_spam_speed", "发送间隔", 0.5, 0.5, 60.0, 0.5)
+                SD(RF("杂项", "功能", "发送间隔"), "单位: 秒")
+            local spam_msg_control = gui.Editbox(RF("杂项", "功能"), "exadbot_spam_msg", "内容")
+                SD(RF("杂项", "功能", "内容"), "发送的消息内容")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_showscores", "显示计分板", false)
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_showscores", "显示计分板", false)
         SD(RF("杂项", "功能", "显示计分板"), "开关计分板")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_automatch", "自动匹配", false)
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_automatch", "自动匹配", false)
         SD(RF("杂项", "功能", "自动匹配"), "在大厅启用时立即匹配；从对局回到大厅后按匹配延迟设置触发")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_automatch_delay", "匹配延迟", 10, 1, 10, 1)
-        SD(RF("杂项", "功能", "匹配延迟"), "从对局回到大厅后等待时间；单位: 秒")
+            local automatch_delay_control = gui.Slider(RF("杂项", "功能"), "exadbot_automatch_delay", "匹配延迟", 10, 1, 10, 1)
+                SD(RF("杂项", "功能", "匹配延迟"), "从对局回到大厅后等待时间；单位: 秒")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_autodisconnect", "自动退出", false)
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_autodisconnect", "自动退出", false)
         SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅；自动匹配将在回到大厅后按匹配延迟设置触发")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_botdisconnect", "出现Bot退出", false)
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_botdisconnect", "出现Bot退出", false)
         SD(RF("杂项", "功能", "出现Bot退出"), "对局内检测到Bot后等待设定时长；到时仍在对局且有Bot、此选项开启时退出")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_botdisconnect_delay", "Bot退出等待时长", 1, 1, 10, 1)
-        SD(RF("杂项", "功能", "Bot退出等待时长"), "检测到Bot后等待时间；单位: 秒")
+            local botdisconnect_delay_control = gui.Slider(RF("杂项", "功能"), "exadbot_botdisconnect_delay", "Bot退出等待时长", 1, 1, 10, 1)
+                SD(RF("杂项", "功能", "Bot退出等待时长"), "检测到Bot后等待时间；单位: 秒")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
-    gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
-        SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
+            local kill_throttle_deaths_control = gui.Slider(RF("杂项", "功能"), "exadbot_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
+                SD(RF("杂项", "功能", "恢复所需死亡次数"), "单位: 次")
 
-    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_switchteam", "切换阵营", false)
+    gui.Checkbox(RF("杂项", "功能"), "exadbot_switcher_enable", "切换阵营", false)
         SD(RF("杂项", "功能", "切换阵营"), "自动切换阵营")
-    local switch_delay_control = gui.Slider(RF("杂项", "功能"), "advanced_spam_admode_switchdelay", "切换间隔", 1.5, 0.1, 30.0, 0.5)
+    local switcher_switchdelay_control = gui.Slider(RF("杂项", "功能"), "exadbot_switcher_switchdelay", "切换间隔", 1.5, 0.1, 30.0, 0.5)
         SD(RF("杂项", "功能", "切换间隔"), "单位: 秒")
-    local fire_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_fire_switchteam", "开火切换阵营", false)
+    local switcher_fire_switchteam_control = gui.Checkbox(RF("杂项", "功能"), "exadbot_switcher_fire_switchteam", "开火切换阵营", false)
         SD(RF("杂项", "功能", "开火切换阵营"), "开火时立即切换阵营，并刷新定时切换倒计时")
-    local hurt_switch_control = gui.Checkbox(RF("杂项", "功能"), "advanced_spam_admode_hurt_switchteam", "受伤切换阵营", false)
+    local switcher_hurt_switchteam_control = gui.Checkbox(RF("杂项", "功能"), "exadbot_switcher_hurt_switchteam", "受伤切换阵营", false)
         SD(RF("杂项", "功能", "受伤切换阵营"), "自身受到伤害时立即切换阵营，并刷新定时切换倒计时")
-    local primary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_primaryweapon", "自动购买-主武器", "禁用", "轮询", "大狙", "连狙", "鸟狙")
+    local switcher_primaryweapon_control = gui.Combobox(RF("杂项", "功能"), "exadbot_switcher_primaryweapon", "自动购买-主武器", "禁用", "轮询", "大狙", "连狙", "鸟狙")
         SD(RF("杂项", "功能", "自动购买-主武器"), "切换阵营时购买主武器；轮询仅在主武器中循环")
-    local secondary_weapon_control = gui.Combobox(RF("杂项", "功能"), "advanced_spam_admode_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
+    local switcher_secondaryweapon_control = gui.Combobox(RF("杂项", "功能"), "exadbot_switcher_secondaryweapon", "自动购买-副武器", "禁用", "轮询", "左轮", "沙鹰")
         SD(RF("杂项", "功能", "自动购买-副武器"), "切换阵营时购买副武器；轮询仅在副武器中循环")
 
-gui.Text(RF("杂项", "功能"), "---------------------------------------------------------------")
+    local function RestoreKillThrottleState()
+        if not KillThrottleWaiting then
+            return
+        end
 
-function SendMsg(team_only, msg)
-    if team_only then
+        gui.SetValue("lbot.trg.enable", true)
+        gui.SetValue("rbot.enable", true)
+        gui.SetValue("lbot.aim.autoaun", true)
+        KillThrottleWaiting = false
+        DeathsSinceKill = 0
+        KillThrottleWasInGame = false
+        DebugPrint("击杀限速恢复：已恢复 lbot.trg.enable、rbot.enable、lbot.aim.autoaun")
+    end
+
+function SendMsg(spam_onlyteam, msg)
+    if spam_onlyteam then
         client.ChatTeamSay(msg)
     else
         client.ChatSay(msg)
@@ -232,7 +230,7 @@ local function StartAutoMatchmaking()
     AutoMatchStarted = true
 end
 
-local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option, reason)
+local function SwitchTeam(cur_time, switcher_primaryweapon, switcher_secondaryweapon, reason)
     local current_team = GetLocalTeam()
     if current_team ~= 2 and current_team ~= 3 then
         DebugPrint(string.format("%s切队取消：自身队伍无效(%s)", reason, tostring(current_team)))
@@ -246,7 +244,7 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     }
     local primary_buy_command
     primary_buy_command, CurrentPrimaryBuybotOption = GetBuyCommand(
-        primary_weapon_option,
+        switcher_primaryweapon,
         CurrentPrimaryBuybotOption,
         2,
         4,
@@ -254,7 +252,7 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     )
     local secondary_buy_command
     secondary_buy_command, CurrentSecondaryBuybotOption = GetBuyCommand(
-        secondary_weapon_option,
+        switcher_secondaryweapon,
         CurrentSecondaryBuybotOption,
         2,
         3,
@@ -274,7 +272,7 @@ local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_opti
     return true
 end
 
-LastScoreboardEnable = gui.GetValue("misc.advanced_spam_showscores")
+LastScoreboardEnable = showscores_enable
 client.AllowListener("weapon_fire")
 client.AllowListener("player_hurt")
 client.AllowListener("player_death")
@@ -285,7 +283,7 @@ callbacks.Register("FireGameEvent", function(e)
     local local_index = client.GetLocalPlayerIndex()
 
     if event_name == "cs_win_panel_match" then
-        if gui.GetValue("misc.advanced_spam_autodisconnect") then
+        if gui.GetValue("misc.exadbot_autodisconnect") then
             RequestDisconnect("比赛结束：退出当前对局")
         end
         return
@@ -299,15 +297,14 @@ callbacks.Register("FireGameEvent", function(e)
         DebugPrint(string.format("weapon_fire：UserID=%d，事件玩家实体索引=%s，本地玩家索引=%s，自身匹配=%s，武器=%s",
             user_id, tostring(player_index), tostring(local_index), tostring(is_local_fire), e:GetString("weapon")))
         if is_local_fire then
-            local switch_enabled = gui.GetValue("misc.advanced_spam_admode_switchteam")
-            local fire_switch_enabled = gui.GetValue("misc.advanced_spam_admode_fire_switchteam")
+            local fire_switch_enabled = gui.GetValue("misc.exadbot_switcher_fire_switchteam")
             DebugPrint(string.format("自身开火处理：切换阵营=%s，开火切换=%s",
-                tostring(switch_enabled), tostring(fire_switch_enabled)))
-            if switch_enabled and fire_switch_enabled then
+                tostring(switcher_enable), tostring(fire_switch_enabled)))
+            if switcher_enable and fire_switch_enabled then
                 SwitchTeam(
                     globals.RealTime(),
-                    gui.GetValue("misc.advanced_spam_admode_primaryweapon"),
-                    gui.GetValue("misc.advanced_spam_admode_secondaryweapon"),
+                    switcher_primaryweapon,
+                    switcher_secondaryweapon,
                     "开火"
                 )
             end
@@ -338,15 +335,14 @@ callbacks.Register("FireGameEvent", function(e)
             tostring(local_index), tostring(is_local_hurt), weapon, damage,
             tostring(self_damage), tostring(environmental_damage)))
         if is_local_hurt and damage > 0 and not excluded_damage then
-            local switch_enabled = gui.GetValue("misc.advanced_spam_admode_switchteam")
-            local hurt_switch_enabled = gui.GetValue("misc.advanced_spam_admode_hurt_switchteam")
+            local hurt_switch_enabled = gui.GetValue("misc.exadbot_switcher_hurt_switchteam")
             DebugPrint(string.format("自身受伤处理：切换阵营=%s，受伤切换=%s",
-                tostring(switch_enabled), tostring(hurt_switch_enabled)))
-            if switch_enabled and hurt_switch_enabled then
+                tostring(switcher_enable), tostring(hurt_switch_enabled)))
+            if switcher_enable and hurt_switch_enabled then
                 SwitchTeam(
                     globals.RealTime(),
-                    gui.GetValue("misc.advanced_spam_admode_primaryweapon"),
-                    gui.GetValue("misc.advanced_spam_admode_secondaryweapon"),
+                    switcher_primaryweapon,
+                    switcher_secondaryweapon,
                     "受伤"
                 )
             end
@@ -371,9 +367,9 @@ callbacks.Register("FireGameEvent", function(e)
     DebugPrint(string.format("player_death：击杀者UserID=%d/玩家实体%s，受害者UserID=%d/玩家实体%s，本地玩家索引=%s，自身击杀=%s，自身死亡=%s，限速=%s",
         attacker_user_id, tostring(attacker_index), victim_user_id, tostring(victim_index),
         tostring(local_index), tostring(local_kill), tostring(local_death),
-        tostring(gui.GetValue("misc.advanced_spam_kill_throttle"))))
+        tostring(gui.GetValue("misc.exadbot_kill_throttle"))))
 
-    if not gui.GetValue("misc.advanced_spam_kill_throttle") then
+    if not gui.GetValue("misc.exadbot_kill_throttle") then
         return
     end
 
@@ -387,8 +383,8 @@ callbacks.Register("FireGameEvent", function(e)
     elseif KillThrottleWaiting and local_death then
         DeathsSinceKill = DeathsSinceKill + 1
         DebugPrint(string.format("自身死亡：死亡计数=%d/%d",
-            DeathsSinceKill, gui.GetValue("misc.advanced_spam_kill_throttle_deaths")))
-        if DeathsSinceKill >= gui.GetValue("misc.advanced_spam_kill_throttle_deaths") then
+            DeathsSinceKill, kill_throttle_deaths))
+        if DeathsSinceKill >= kill_throttle_deaths then
             RestoreKillThrottleState()
             DebugPrint("死亡次数达到设定值：已恢复三项功能")
         end
@@ -399,27 +395,41 @@ callbacks.Register("Draw", function()
 
     cur_time = globals.RealTime()
 
-    enable = gui.GetValue("misc.advanced_spam_enable")
-    team_only = gui.GetValue("misc.advanced_spam_onlyteam")
-    admode = gui.GetValue("misc.advanced_spam_admode_switchteam")
-    team_delay = gui.GetValue("misc.advanced_spam_admode_switchdelay")
-    primary_weapon_option = gui.GetValue("misc.advanced_spam_admode_primaryweapon")
-    secondary_weapon_option = gui.GetValue("misc.advanced_spam_admode_secondaryweapon")
-    scoreboard_enable = gui.GetValue("misc.advanced_spam_showscores")
-    send_speed = gui.GetValue("misc.advanced_spam_speed")
-    msg = gui.GetValue("misc.advanced_spam_msg")
-    kill_throttle = gui.GetValue("misc.advanced_spam_kill_throttle")
+    spam_enable = gui.GetValue("misc.exadbot_spam_enable")
+        spam_onlyteam = gui.GetValue("misc.exadbot_spam_onlyteam")
+        spam_speed = gui.GetValue("misc.exadbot_spam_speed")
+        spam_msg = gui.GetValue("misc.exadbot_spam_msg")
+        spam_onlyteam_control:SetDisabled(not spam_enable)
+        spam_speed_control:SetDisabled(not spam_enable)
+        spam_msg_control:SetDisabled(not spam_enable)
 
-    switch_delay_control:SetDisabled(not admode)
-    fire_switch_control:SetDisabled(not admode)
-    hurt_switch_control:SetDisabled(not admode)
-    primary_weapon_control:SetDisabled(not admode)
-    secondary_weapon_control:SetDisabled(not admode)
-    debug_control:SetDisabled(not DebugMode)
+    showscores_enable = gui.GetValue("misc.exadbot_showscores")
 
-    if scoreboard_enable ~= LastScoreboardEnable then
-        client.Command(scoreboard_enable and "+showscores" or "-showscores")
-        LastScoreboardEnable = scoreboard_enable
+    automatch_enable = gui.GetValue("misc.exadbot_automatch")
+        automatch_delay = gui.GetValue("misc.exadbot_automatch_delay")
+        automatch_delay_control:SetDisabled(not automatch_enable)
+
+    botdisconnect_enable = gui.GetValue("misc.exadbot_botdisconnect")
+        botdisconnect_delay = gui.GetValue("misc.exadbot_botdisconnect_delay")
+        botdisconnect_delay_control:SetDisabled(not exadbot_botdisconnect_enable)
+
+    kill_throttle = gui.GetValue("misc.exadbot_kill_throttle")
+        kill_throttle_deaths = gui.GetValue("misc.exadbot_kill_throttle_deaths")
+        kill_throttle_deaths_control:SetDisabled(not kill_throttle)
+
+    switcher_enable = gui.GetValue("misc.exadbot_switcher_enable")
+        switcher_switchdelay = gui.GetValue("misc.exadbot_switcher_switchdelay")
+        switcher_primaryweapon = gui.GetValue("misc.exadbot_switcher_primaryweapon")
+        switcher_secondaryweapon = gui.GetValue("misc.exadbot_switcher_secondaryweapon")
+        switcher_switchdelay_control:SetDisabled(not switcher_enable)
+        switcher_fire_switchteam_control:SetDisabled(not switcher_enable)
+        switcher_hurt_switchteam_control:SetDisabled(not switcher_enable)
+        switcher_primaryweapon_control:SetDisabled(not switcher_enable)
+        switcher_secondaryweapon_control:SetDisabled(not switcher_enable)
+
+    if showscores_enable ~= LastScoreboardEnable then
+        client.Command(showscores_enable and "+showscores" or "-showscores")
+        LastScoreboardEnable = showscores_enable
     end
 
     local local_index = client.GetLocalPlayerIndex()
@@ -467,15 +477,14 @@ callbacks.Register("Draw", function()
 
     local local_index = client.GetLocalPlayerIndex()
     local is_in_game = local_index ~= nil and local_index > 0
-    local auto_match_enabled = gui.GetValue("misc.advanced_spam_automatch")
+    local auto_match_enabled = automatch_enable
     if WasInGame and not is_in_game and auto_match_enabled then
-        local auto_match_delay = gui.GetValue("misc.advanced_spam_automatch_delay")
-        AutoMatchDelayUntil = cur_time + auto_match_delay
-        DebugPrint(string.format("检测到从对局返回大厅：自动匹配将在%d秒后触发", auto_match_delay))
+        AutoMatchDelayUntil = cur_time + automatch_delay
+        DebugPrint(string.format("检测到从对局返回大厅：自动匹配将在%d秒后触发", automatch_delay))
     end
     WasInGame = is_in_game
 
-    local bot_disconnect_enabled = gui.GetValue("misc.advanced_spam_botdisconnect")
+    local bot_disconnect_enabled = gui.GetValue("misc.exadbot_botdisconnect")
     if BotDisconnectPendingUntil then
         if cur_time >= BotDisconnectPendingUntil then
             BotDisconnectPendingUntil = nil
@@ -490,9 +499,8 @@ callbacks.Register("Draw", function()
     elseif cur_time - LastAutoMatchCheckTime >= 1 then
         LastAutoMatchCheckTime = cur_time
         if bot_disconnect_enabled and is_in_game and not DisconnectIssued and HasBotPlayer() then
-            local bot_disconnect_delay = gui.GetValue("misc.advanced_spam_botdisconnect_delay")
-            BotDisconnectPendingUntil = cur_time + bot_disconnect_delay
-            DebugPrint(string.format("检测到Bot：开始%d秒确认倒计时", bot_disconnect_delay))
+            BotDisconnectPendingUntil = cur_time + botdisconnect_delay
+            DebugPrint(string.format("检测到Bot：开始%d秒确认倒计时", botdisconnect_delay))
         end
     end
 
@@ -512,19 +520,19 @@ callbacks.Register("Draw", function()
         DebugPrint("已在大厅触发自动匹配")
     end
 
-    if admode and cur_time - LastTeamSwitchTime >= team_delay then
-        SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option, "定时")
+    if switcher_enable and cur_time - LastTeamSwitchTime >= switcher_switchdelay then
+        SwitchTeam(cur_time, switcher_primaryweapon, switcher_secondaryweapon, "定时")
     end
 
-    if enable and not LastSpamEnable and msg ~= "" then
-        SendMsg(team_only, msg)
+    if spam_enable and not LastSpamEnable and spam_msg ~= "" then
+        SendMsg(spam_onlyteam, spam_msg)
         LastSendTime = cur_time
     end
 
-    if enable and cur_time - LastSendTime >= send_speed and msg ~= "" then
-        SendMsg(team_only, msg)
+    if spam_enable and cur_time - LastSendTime >= spam_speed and spam_msg ~= "" then
+        SendMsg(spam_onlyteam, spam_msg)
         LastSendTime = cur_time
     end
 
-    LastSpamEnable = enable
+    LastSpamEnable = spam_enable
 end)
