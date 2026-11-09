@@ -1,11 +1,6 @@
 RF = gui.Reference
 
 local DebugMode = false
---[[
-    TODO: 
-        1.击杀限速开启前提下，自己disconnect后，lbot.trg.enable，rbot.enable和lbot.aim.autoaun不会恢复为true
-        2.lbot.trg.enable，rbot.enable和lbot.aim.autoaun关闭的情况下，开启击杀限速，死亡次数达标也不会恢复为true
-]]
 LastSendTime = 0
 LastTeamSwitchTime = 0
 CurrentPrimaryBuybotOption = 2
@@ -14,6 +9,8 @@ LastSpamEnable = false
 local LastScoreboardEnable = false
 local KillThrottleWaiting = false
 local DeathsSinceKill = 0
+local LastKillThrottleEnable = false
+local KillThrottleWasInGame = false
 local LastAutoMatchCheckTime = 0
 
 local function DebugPrint(message)
@@ -21,6 +18,20 @@ local function DebugPrint(message)
         print("[ExAdBot DEBUG] " .. message)
         gui.SetValue("misc.log.console", true)
     end
+end
+
+local function RestoreKillThrottleState()
+    if not KillThrottleWaiting then
+        return
+    end
+
+    gui.SetValue("lbot.trg.enable", true)
+    gui.SetValue("rbot.enable", true)
+    gui.SetValue("lbot.aim.autoaun", true)
+    KillThrottleWaiting = false
+    DeathsSinceKill = 0
+    KillThrottleWasInGame = false
+    DebugPrint("击杀限速恢复：已恢复 lbot.trg.enable、rbot.enable、lbot.aim.autoaun")
 end
 
 function SD(RF, Description)
@@ -312,18 +323,14 @@ callbacks.Register("FireGameEvent", function(e)
         gui.SetValue("lbot.aim.autoaun", false)
         KillThrottleWaiting = true
         DeathsSinceKill = 0
-        DebugPrint("击杀他人：已关闭 lbot.trg.enable 和 rbot.enable，死亡计数已重置")
+        DebugPrint("击杀他人：关闭三项功能并重置死亡计数")
     elseif KillThrottleWaiting and local_death then
         DeathsSinceKill = DeathsSinceKill + 1
         DebugPrint(string.format("自身死亡：死亡计数=%d/%d",
             DeathsSinceKill, gui.GetValue("misc.advanced_spam_kill_throttle_deaths")))
         if DeathsSinceKill >= gui.GetValue("misc.advanced_spam_kill_throttle_deaths") then
-            gui.SetValue("lbot.trg.enable", true)
-            gui.SetValue("rbot.enable", true)
-            gui.SetValue("lbot.aim.autoaun", true)
-            KillThrottleWaiting = false
-            DeathsSinceKill = 0
-            DebugPrint("死亡次数达到设定值：已恢复 lbot.trg.enable 和 rbot.enable")
+            RestoreKillThrottleState()
+            DebugPrint("死亡次数达到设定值：已恢复三项功能")
         end
     end
 end)
@@ -355,14 +362,33 @@ callbacks.Register("Draw", function()
         LastScoreboardEnable = scoreboard_enable
     end
 
-    if not kill_throttle and KillThrottleWaiting then
-        DebugPrint("击杀限速已关闭：恢复两种开火并清除等待状态")
-        gui.SetValue("lbot.trg.enable", true)
-        gui.SetValue("rbot.enable", true)
-        gui.SetValue("lbot.aim.autoaun", true)
-        KillThrottleWaiting = false
+    local local_index = client.GetLocalPlayerIndex()
+    local is_in_game = local_index and local_index > 0
+
+    if kill_throttle and not LastKillThrottleEnable then
+        gui.SetValue("lbot.trg.enable", false)
+        gui.SetValue("rbot.enable", false)
+        gui.SetValue("lbot.aim.autoaun", false)
+        KillThrottleWaiting = true
         DeathsSinceKill = 0
+        KillThrottleWasInGame = false
+        DebugPrint("击杀限速已开启：关闭三项功能并开始统计自身死亡")
     end
+
+    if not kill_throttle then
+        if KillThrottleWaiting then
+            KillThrottleWaiting = false
+            DeathsSinceKill = 0
+            KillThrottleWasInGame = false
+            DebugPrint("击杀限速已关闭：清除等待状态，不更改三项功能")
+        end
+    elseif KillThrottleWaiting and is_in_game then
+        KillThrottleWasInGame = true
+    elseif KillThrottleWaiting and KillThrottleWasInGame then
+        DebugPrint("击杀限速等待中玩家已断线：恢复三项功能")
+        RestoreKillThrottleState()
+    end
+    LastKillThrottleEnable = kill_throttle
 
     if gui.GetValue("misc.chatspam") then
         RF("杂项", "功能", "广告"):SetValue(false)
