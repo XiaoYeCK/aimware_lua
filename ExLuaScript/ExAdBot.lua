@@ -1,3 +1,9 @@
+--[[
+    TODO:
+    1. Bot出现后disconnect,短时间匹配会触发风控，需要增加匹配延迟
+    2. 自动匹配建议改成在大厅开启则立即触发；执行disconnect后回到大厅则延迟10秒触发
+]]
+
 RF = gui.Reference
 
 local DebugMode = false
@@ -87,6 +93,9 @@ gui.Text(RF("杂项", "功能"), "--------------------------- ExAdBot ----------
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_autodisconnect", "自动退出", false)
         SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅")
 
+    gui.Checkbox(RF("杂项", "功能"), "advanced_spam_botdisconnect", "出现Bot退出", false)
+        SD(RF("杂项", "功能", "出现Bot退出"), "每秒检查玩家控制器；检测到m_steamID为0时退出当前对局")
+
     gui.Checkbox(RF("杂项", "功能"), "advanced_spam_kill_throttle", "击杀限速", false)
         SD(RF("杂项", "功能", "击杀限速"), "击杀他人后暂时关闭两种开火，达到死亡次数后恢复")
     gui.Slider(RF("杂项", "功能"), "advanced_spam_kill_throttle_deaths", "恢复所需死亡次数", 1, 1, 10, 1)
@@ -170,6 +179,26 @@ local function GetPlayerPawnIndexByUserID(user_id)
     end
 
     return pawn_handle % 32768
+end
+
+local function HasBotPlayer()
+    for index = 1, 64 do
+        local controller = entities.GetByIndex(index)
+        if controller then
+            local class_ok, class = pcall(function()
+                return controller:GetClass()
+            end)
+            if class_ok and class == "CCSPlayerController" then
+                local steam_id_ok, steam_id = pcall(function()
+                    return controller:GetFieldInt("m_steamID")
+                end)
+                if steam_id_ok and steam_id == 0 then
+                    return true
+                end
+            end
+        end
+    end
+    return false
 end
 
 local function SwitchTeam(cur_time, primary_weapon_option, secondary_weapon_option, reason)
@@ -408,6 +437,11 @@ callbacks.Register("Draw", function()
         LastAutoMatchCheckTime = cur_time
         local local_index = client.GetLocalPlayerIndex()
         local is_in_game = local_index and local_index > 0
+
+        if gui.GetValue("misc.advanced_spam_botdisconnect") and is_in_game and HasBotPlayer() then
+            DebugPrint("检测到Bot：退出当前对局")
+            client.Command("disconnect")
+        end
 
         if gui.GetValue("misc.advanced_spam_automatch") and not is_in_game then
             panorama.RunScript([[
