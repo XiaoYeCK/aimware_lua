@@ -83,11 +83,10 @@ end
             local automatch_delay_control = gui.Slider(RF("杂项", "功能"), "exadbot_automatch_delay", "匹配延迟", 10, 1, 10, 1)
                 SD(RF("杂项", "功能", "匹配延迟"), "从对局回到大厅后等待时间；单位: 秒")
 
-    gui.Checkbox(RF("杂项", "功能"), "exadbot_autodisconnect", "自动退出", false)
-        SD(RF("杂项", "功能", "自动退出"), "比赛结束自动退出至大厅；自动匹配将在回到大厅后按匹配延迟设置触发")
+    gui.Multibox(RF("杂项", "功能"), "自动退出时机")
+        gui.Checkbox(RF("杂项", "功能", "自动退出时机"), "exadbot_autodisconnect", "比赛结束", false)
+        gui.Checkbox(RF("杂项", "功能", "自动退出时机"), "exadbot_botdisconnect", "出现机器人", false)
 
-    gui.Checkbox(RF("杂项", "功能"), "exadbot_botdisconnect", "出现Bot退出", false)
-        SD(RF("杂项", "功能", "出现Bot退出"), "对局内检测到Bot后等待设定时长；到时仍在对局且有Bot、此选项开启时退出")
             local botdisconnect_delay_control = gui.Slider(RF("杂项", "功能"), "exadbot_botdisconnect_delay", "Bot退出等待时长", 1, 1, 10, 1)
                 SD(RF("杂项", "功能", "Bot退出等待时长"), "检测到Bot后等待时间；单位: 秒")
 
@@ -411,7 +410,7 @@ callbacks.Register("Draw", function()
 
     botdisconnect_enable = gui.GetValue("misc.exadbot_botdisconnect")
         botdisconnect_delay = gui.GetValue("misc.exadbot_botdisconnect_delay")
-        botdisconnect_delay_control:SetDisabled(not exadbot_botdisconnect_enable)
+        botdisconnect_delay_control:SetDisabled(not botdisconnect_enable)
 
     kill_throttle = gui.GetValue("misc.exadbot_kill_throttle")
         kill_throttle_deaths = gui.GetValue("misc.exadbot_kill_throttle_deaths")
@@ -484,13 +483,12 @@ callbacks.Register("Draw", function()
     end
     WasInGame = is_in_game
 
-    local bot_disconnect_enabled = gui.GetValue("misc.exadbot_botdisconnect")
     if BotDisconnectPendingUntil then
         if cur_time >= BotDisconnectPendingUntil then
             BotDisconnectPendingUntil = nil
             LastAutoMatchCheckTime = cur_time
             local bot_still_present = is_in_game and HasBotPlayer()
-            if bot_disconnect_enabled and bot_still_present then
+            if botdisconnect_enable and bot_still_present then
                 RequestDisconnect("Bot退出倒计时结束：对局内仍有Bot，退出当前对局")
             else
                 DebugPrint("Bot退出已取消：倒计时结束时选项未开启、已离开对局或Bot已消失")
@@ -498,7 +496,7 @@ callbacks.Register("Draw", function()
         end
     elseif cur_time - LastAutoMatchCheckTime >= 1 then
         LastAutoMatchCheckTime = cur_time
-        if bot_disconnect_enabled and is_in_game and not DisconnectIssued and HasBotPlayer() then
+        if botdisconnect_enable and is_in_game and not DisconnectIssued and HasBotPlayer() then
             BotDisconnectPendingUntil = cur_time + botdisconnect_delay
             DebugPrint(string.format("检测到Bot：开始%d秒确认倒计时", botdisconnect_delay))
         end
