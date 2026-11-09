@@ -467,13 +467,13 @@ callbacks.Register("Draw", function()
 
     local local_index = client.GetLocalPlayerIndex()
     local is_in_game = local_index ~= nil and local_index > 0
-    if WasInGame == true and not is_in_game then
+    local auto_match_enabled = gui.GetValue("misc.advanced_spam_automatch")
+    if WasInGame and not is_in_game and auto_match_enabled then
         local auto_match_delay = gui.GetValue("misc.advanced_spam_automatch_delay")
         AutoMatchDelayUntil = cur_time + auto_match_delay
         DebugPrint(string.format("检测到从对局返回大厅：自动匹配将在%d秒后触发", auto_match_delay))
     end
     WasInGame = is_in_game
-    --------------------------
 
     local bot_disconnect_enabled = gui.GetValue("misc.advanced_spam_botdisconnect")
     if BotDisconnectPendingUntil then
@@ -496,8 +496,6 @@ callbacks.Register("Draw", function()
         end
     end
 
-    local auto_match_enabled = gui.GetValue("misc.advanced_spam_automatch")
-
     if is_in_game then
         AutoMatchStarted = false
     elseif DisconnectIssued then
@@ -506,6 +504,7 @@ callbacks.Register("Draw", function()
 
     if not auto_match_enabled then
         AutoMatchStarted = false
+        AutoMatchDelayUntil = nil
     elseif not is_in_game and not AutoMatchStarted
         and (AutoMatchDelayUntil == nil or cur_time >= AutoMatchDelayUntil) then
         StartAutoMatchmaking()
