@@ -200,7 +200,20 @@ local function HasBotPlayer()
                     return controller:GetFieldInt("m_steamID")
                 end)
                 if steam_id_ok and steam_id == 0 then
-                    return true
+                    local pawn_handle_ok, pawn_handle = pcall(function()
+                        return controller:GetFieldInt("m_hPlayerPawn")
+                    end)
+                    if pawn_handle_ok and pawn_handle and pawn_handle > 0 then
+                        local pawn = entities.GetByIndex(pawn_handle % 32768)
+                        if pawn then
+                            local is_player_ok, is_player = pcall(function()
+                                return pawn:IsPlayer()
+                            end)
+                            if is_player_ok and is_player then
+                                return true
+                            end
+                        end
+                    end
                 end
             end
         end
@@ -272,7 +285,7 @@ local function SwitchTeam(cur_time, switcher_primaryweapon, switcher_secondarywe
     return true
 end
 
-LastScoreboardEnable = showscores_enable
+LastScoreboardEnable = gui.GetValue("misc.exadbot_showscores")
 client.AllowListener("weapon_fire")
 client.AllowListener("player_hurt")
 client.AllowListener("player_death")
