@@ -14,7 +14,7 @@ https://github.com/XiaoYeCK/aimware_lua
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-11-9 (UTC+8) test-1"
+UpdateInfo = "2026-11-15 (UTC+8) test-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -52,10 +52,6 @@ if ScriptName ~= TargetName then
     file.Delete(ScriptName)
     NewPrint("脚本已重命名为:" .. Space .. TargetName .. Space .. "(使用感叹号是为了优先加载)")
     NewPrint("请刷新脚本列表后手动重载")
-    --[[
-        已加载脚本文件名和改动后不一致无法自行重载，若一致则可以
-        后续可以识别是否是TargetName，如果原名称和TargetName一致直接重载，不一致才提示刷新列表手动重载
-    ]]
 end
 
 --<->
@@ -104,7 +100,6 @@ end
 
 DumpOutput = DumpGUI()
 
--- /*
 function FetchURL(urlOrLines, path)
     if path then
         for _, line in ipairs(urlOrLines) do
@@ -114,10 +109,9 @@ function FetchURL(urlOrLines, path)
             if fetchData then
                 return fetchData
             end
-
-            NewPrint("请求失败:" .. Space .. requestURL)
         end
 
+        NewPrint("所有请求线路均失败")
         return false
     end
 
@@ -129,7 +123,6 @@ function FetchURL(urlOrLines, path)
 
     return fetchData
 end
--- */
 
 function NonASCII(str)
     for i = 1, #str do
