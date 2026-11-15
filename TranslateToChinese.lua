@@ -14,7 +14,7 @@ https://github.com/XiaoYeCK/aimware_lua
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-11-15 (UTC+8) test-2"
+UpdateInfo = "2026-11-15 (UTC+8) test-3"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -356,7 +356,7 @@ function TranslateToChinese()
             SN(RF("暴力", "常规", "Refine Shot"), "射击优化")
                 SD(RF("暴力", "常规", "射击优化"), "多方面优化射击表现")
             SN(RF("暴力", "常规", "Double Precision"), "加速精度恢复")
-                SD(RF("暴力", "常规", "加速精度恢复"), "缩短武器精度恢复时间")
+                SD(RF("暴力", "常规", "加速精度恢复"), "缩短武器精度恢复时间, 与\"杂项/移动/快速爬梯\"冲突")
             SN(RF("暴力", "常规", "Silent Aim"), "静默自瞄")
                 SD(RF("暴力", "常规", "静默自瞄"), "自瞄不会更改你的视角")
             SN(RF("暴力", "常规", "Backtrack"), "射击回溯")
