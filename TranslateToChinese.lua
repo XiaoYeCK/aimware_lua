@@ -14,7 +14,7 @@ https://github.com/XiaoYeCK/aimware_lua
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-11-15 (UTC+8) test-1"
+UpdateInfo = "2026-11-15 (UTC+8) test-2"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -117,7 +117,7 @@ function FetchURL(urlOrLines, path)
 
     local fetchData = http.Get(urlOrLines)
     if not fetchData then
-        NewPrint("请求失败:" .. Space .. urlOrLines)
+        NewPrint("请求失败")
         return false
     end
 
@@ -165,7 +165,6 @@ function ValidateOnline()
         NewPrint("同步在线脚本")
         LuaData = FetchURL(Lines, LuaCheckPath)
         if not LuaData then
-            NewPrint("无法获取在线脚本, 请检查网络连接")
             return false
         end
             file.Write(ScriptName, LuaData)
@@ -187,10 +186,7 @@ function ValidateOnline()
         end
 
         file.Write("EN.txt", DumpOutput)
-        NewPrint("已写入EN.txt")
-
         file.Write("EN_Old.txt", UpdateData)
-        NewPrint("已写入EN_Old.txt")
 
         return false
     end
@@ -906,7 +902,7 @@ function TranslateToChinese()
                 SN(RF("杂项", "移动", "Slow Walk Speed"), "慢走速度")
                         SD(RF("杂项", "移动", "慢走速度"), "按住热键时按设定百分比调整移速")
                 SN(RF("杂项", "移动", "Fast Ladder"), "快速爬梯")
-                        SD(RF("杂项", "移动", "快速爬梯"), "加快爬梯速度")
+                        SD(RF("杂项", "移动", "快速爬梯"), "加快爬梯速度, 与\"暴力/加速精度恢复\"冲突")
                 SN(RF("杂项", "移动", "Quick Stop"), "快速急停")
                         SD(RF("杂项", "移动", "快速急停"), "松开移动键时快速急停")
 
