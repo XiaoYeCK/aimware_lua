@@ -1,18 +1,20 @@
--- AimWare V6 CS2 汉化
+--[[
+AimWare V6 CS2 汉化
 
--- 旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
--- 人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
--- 本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
+旨在方便小白上手, 翻译可能不符合高手之间的叫法, 但大体意思是对的
+人工校对, 描述为个人理解, 可能不够准确, 欢迎指正
+本项目仅利用闲暇时间无偿维护, 纯属兴趣驱动, 并无商业收益, 因此更新 / 回复可能不及时, 本人没有义务提供及时支持
 
--- 本项目基于 GNU Affero General Public License v3.0 (AGPL‑v3.0) 开源
--- 您可以自由地使用、修改、分发源代码，但必须遵守 AGPL‑v3.0 协议的条款
+本项目基于 GNU Affero General Public License v3.0 (AGPL‑v3.0) 开源
+您可以自由地使用、修改、分发源代码，但必须遵守 AGPL‑v3.0 协议的条款
 
--- https://aimware.net/forum/thread/179941
--- https://github.com/XiaoYeCK/aimware_lua
+https://aimware.net/forum/thread/179941
+https://github.com/XiaoYeCK/aimware_lua
+]]
 
 callbacks.Register("Draw", function() end)-- 为了随参数加载脚本, 保持脚本加载
 
-UpdateInfo = "2026-10-30 (UTC+8) main-1"
+UpdateInfo = "2026-11-15 (UTC+8) main-1"
 Notice = "汉化脚本在AW官方论坛免费发布, 源代码在GitHub"
 
 Branches = {
@@ -22,8 +24,13 @@ Branches = {
 
 ThisBranch = "main"
 
-LuaCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
-UpdateCheckURL = "https://raw.githubusercontent.com/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
+Lines = {
+    "https://raw.githubusercontent.com",
+    "https://raw.githubusercontent.proxy.unkhax.top"
+}
+
+LuaCheckPath = "/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/TranslateToChinese.lua"
+UpdateCheckPath = "/XiaoYeCK/aimware_lua/" .. ThisBranch .. "/Check.en"
 
 ScriptName = GetScriptName()
 
@@ -45,8 +52,6 @@ if ScriptName ~= TargetName then
     file.Delete(ScriptName)
     NewPrint("脚本已重命名为:" .. Space .. TargetName .. Space .. "(使用感叹号是为了优先加载)")
     NewPrint("请刷新脚本列表后手动重载")
-    -- 已加载脚本文件名和改动后不一致无法自行重载，若一致则可以
-    -- 后续可以识别是否是TargetName，如果原名称和TargetName一致直接重载，不一致才提示刷新列表手动重载
 end
 
 --<->
@@ -95,15 +100,28 @@ end
 
 DumpOutput = DumpGUI()
 
-function FetchURL(url)
-    FetchData = http.Get(url)
+function FetchURL(urlOrLines, path)
+    if path then
+        for _, line in ipairs(urlOrLines) do
+            local requestURL = line .. path
+            local fetchData = http.Get(requestURL)
 
-    if not FetchData then
-        NewPrint("请求失败:" .. Space .. url)
+            if fetchData then
+                return fetchData
+            end
+        end
+
+        NewPrint("所有请求线路均失败")
         return false
     end
 
-    return FetchData
+    local fetchData = http.Get(urlOrLines)
+    if not fetchData then
+        NewPrint("请求失败")
+        return false
+    end
+
+    return fetchData
 end
 
 function NonASCII(str)
@@ -120,8 +138,8 @@ function CheckTranslated()
     return NonASCII(DumpOutput)
 end
 
-function CompareWithOnline(localText, url)
-    remote = FetchURL(url)
+function CompareWithOnline(localText, urlOrLines, path)
+    remote = FetchURL(urlOrLines, path)
 
     if not remote then
         return "Skip"
@@ -140,21 +158,20 @@ end
 function ValidateOnline()
     localScript = file.Read(ScriptName)
 
-    LuaResult = CompareWithOnline(localScript, LuaCheckURL)
+    LuaResult = CompareWithOnline(localScript, Lines, LuaCheckPath)
     if LuaResult == "Skip" then
         return false
     elseif LuaResult == false then
         NewPrint("同步在线脚本")
-        LuaData = FetchURL(LuaCheckURL)
+        LuaData = FetchURL(Lines, LuaCheckPath)
         if not LuaData then
-            NewPrint("无法获取在线脚本, 请检查网络连接")
             return false
         end
             file.Write(ScriptName, LuaData)
             LoadScript(ScriptName)
     end
 
-    UpdateResult = CompareWithOnline(DumpOutput, UpdateCheckURL)
+    UpdateResult = CompareWithOnline(DumpOutput, Lines, UpdateCheckPath)
     if UpdateResult == "Skip" then
         return false
     elseif UpdateResult == false then
@@ -163,16 +180,13 @@ function ValidateOnline()
         NewPrint("若是AimWare更新, 请等待汉化更新, 催更请发送电子邮件至 update@xiaoyecloud.asia (仅限催更), 论坛发布页不常看")
         NewPrint("也可能是在此之前加载的其它脚本导致, 影响检查结果的脚本通常包含\"gui.Reference\"")
 
-        UpdateData = FetchURL(UpdateCheckURL)
+        UpdateData = FetchURL(Lines, UpdateCheckPath)
         if not UpdateData then
             return false
         end
 
         file.Write("EN.txt", DumpOutput)
-        NewPrint("已写入EN.txt")
-
         file.Write("EN_Old.txt", UpdateData)
-        NewPrint("已写入EN_Old.txt")
 
         return false
     end
@@ -342,7 +356,7 @@ function TranslateToChinese()
             SN(RF("暴力", "常规", "Refine Shot"), "射击优化")
                 SD(RF("暴力", "常规", "射击优化"), "多方面优化射击表现")
             SN(RF("暴力", "常规", "Double Precision"), "加速精度恢复")
-                SD(RF("暴力", "常规", "加速精度恢复"), "缩短武器精度恢复时间")
+                SD(RF("暴力", "常规", "加速精度恢复"), "缩短武器精度恢复时间, 与\"杂项/移动/快速爬梯\"冲突")
             SN(RF("暴力", "常规", "Silent Aim"), "静默自瞄")
                 SD(RF("暴力", "常规", "静默自瞄"), "自瞄不会更改你的视角")
             SN(RF("暴力", "常规", "Backtrack"), "射击回溯")
@@ -888,7 +902,7 @@ function TranslateToChinese()
                 SN(RF("杂项", "移动", "Slow Walk Speed"), "慢走速度")
                         SD(RF("杂项", "移动", "慢走速度"), "按住热键时按设定百分比调整移速")
                 SN(RF("杂项", "移动", "Fast Ladder"), "快速爬梯")
-                        SD(RF("杂项", "移动", "快速爬梯"), "加快爬梯速度")
+                        SD(RF("杂项", "移动", "快速爬梯"), "加快爬梯速度, 与\"暴力/加速精度恢复\"冲突")
                 SN(RF("杂项", "移动", "Quick Stop"), "快速急停")
                         SD(RF("杂项", "移动", "快速急停"), "松开移动键时快速急停")
 
