@@ -26,7 +26,7 @@ local limiter_group = gui.Groupbox(feature_root, limiter_label)
 local cooldown_slider = gui.Slider(
     limiter_group,
     "kill_limiter_cooldown",
-    menu_is_translated and "冷却时间 (秒)" or "Cooldown (s)",
+    menu_is_translated and "冷却时间" or "Cooldown",
     30,
     1,
     60,
@@ -182,6 +182,7 @@ local function end_cooldown()
     state.cooling = false
     state.remaining = 0
     gui.SetValue("lbot.trg.enable", true)
+    gui.SetValue("lbot.aim.enable", true)
 end
 
 callbacks.Register("FireGameEvent", function(event)
@@ -231,6 +232,7 @@ callbacks.Register("FireGameEvent", function(event)
     cooldown_until = now + cooldown_duration
     last_time = now
     gui.SetValue("lbot.trg.enable", false)
+    gui.SetValue("lbot.aim.enable", false)
 
     state.cooling = true
     state.remaining = cooldown_duration
@@ -269,6 +271,7 @@ callbacks.Register("Unload", "KillLimiter_Unload", function()
     active = false
     if cooldown_until then
         gui.SetValue("lbot.trg.enable", true)
+        gui.SetValue("lbot.aim.enable", true)
     end
 
     callbacks.Unregister("Draw", "KillLimiter_Update")
