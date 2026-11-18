@@ -171,13 +171,31 @@ local function get_team(index, user_id)
 end
 
 client.AllowListener("player_death")
+client.AllowListener("round_start")
+
+local function end_cooldown()
+    if not cooldown_until then
+        return
+    end
+
+    cooldown_until = nil
+    state.cooling = false
+    state.remaining = 0
+    gui.SetValue("lbot.trg.enable", true)
+end
 
 callbacks.Register("FireGameEvent", function(event)
     if not active then
         return
     end
 
-    if event:GetName() ~= "player_death" then
+    local event_name = event:GetName()
+    if event_name == "round_start" then
+        end_cooldown()
+        return
+    end
+
+    if event_name ~= "player_death" then
         return
     end
 
@@ -190,6 +208,11 @@ callbacks.Register("FireGameEvent", function(event)
     local victim_user_id = event:GetInt("userid")
     local attacker_index = get_player_pawn_index_by_user_id(attacker_user_id)
     local victim_index = get_player_pawn_index_by_user_id(victim_user_id)
+    if victim_index == local_index then
+        end_cooldown()
+        return
+    end
+
     local local_kill = attacker_index ~= nil
         and attacker_index == local_index
         and victim_user_id ~= attacker_user_id
@@ -227,10 +250,7 @@ callbacks.Register("Draw", "KillLimiter_Update", function()
 
         local remaining = cooldown_until - now
         if remaining <= 0 then
-            cooldown_until = nil
-            gui.SetValue("lbot.trg.enable", true)
-            state.cooling = false
-            state.remaining = 0
+            end_cooldown()
         else
             state.cooling = true
             state.remaining = remaining
